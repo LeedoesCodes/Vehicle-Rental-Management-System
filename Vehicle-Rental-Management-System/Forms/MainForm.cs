@@ -25,7 +25,7 @@ namespace Vehicle_Rental_Management_System.Forms
 
         private void SetupForm()
         {
-            // Update user info label (if you have one named lblUserInfo)
+            // Update user info label
             if (lbluserInfo != null)
             {
                 lbluserInfo.Text = $"Welcome,\n{Program.CurrentUsername}\n({Program.CurrentUserRole})";
@@ -77,7 +77,7 @@ namespace Vehicle_Rental_Management_System.Forms
                 }
             }
 
-            // Style logout button differently (if you have one)
+            // Style logout button
             if (btnLogout != null)
             {
                 btnLogout.FlatStyle = FlatStyle.Flat;
@@ -186,7 +186,7 @@ namespace Vehicle_Rental_Management_System.Forms
             // Add to content panel
             contentPanel.Controls.Add(lblWelcome);
 
-            // Add quick stats (optional)
+            // Add quick stats
             AddQuickStats();
         }
 
@@ -222,31 +222,90 @@ namespace Vehicle_Rental_Management_System.Forms
 
         private void ShowVehicleManagement()
         {
-            // 1. Clear the content panel (remove whatever was there before)
+            // Clear the content panel
             contentPanel.Controls.Clear();
 
-            // 2. Create an instance of your new UserControl
-            // Make sure to add 'using Vehicle_Rental_Management_System.Controls;' at the top
+            // Create an instance of VehiclesView
             var vehiclesView = new Controls.VehiclesView();
-
-            // 3. Make it fill the space
             vehiclesView.Dock = DockStyle.Fill;
-
-            // 4. Add it to the panel
             contentPanel.Controls.Add(vehiclesView);
         }
 
         private void ShowCustomerManagement()
         {
-            // 1. Clear old content
             contentPanel.Controls.Clear();
 
-            // 2. Load the Customer View
-            var customerView = new Controls.CustomersView();
-            customerView.Dock = DockStyle.Fill;
+            // Title
+            Label lblTitle = new Label();
+            lblTitle.Text = "Customer Management";
+            lblTitle.Font = new Font("Segoe UI", 16, FontStyle.Bold);
+            lblTitle.ForeColor = Color.FromArgb(0, 120, 215);
+            lblTitle.AutoSize = true;
+            lblTitle.Location = new Point(50, 30);
+            contentPanel.Controls.Add(lblTitle);
 
-            // 3. Add to panel
-            contentPanel.Controls.Add(customerView);
+            // Add Customer Button
+            Button btnAddCustomer = new Button();
+            btnAddCustomer.Text = "➕ Add New Customer";
+            btnAddCustomer.Size = new Size(180, 45);
+            btnAddCustomer.Location = new Point(50, 90);
+            btnAddCustomer.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            btnAddCustomer.BackColor = Color.FromArgb(40, 167, 69); // Green
+            btnAddCustomer.ForeColor = Color.White;
+            btnAddCustomer.FlatStyle = FlatStyle.Flat;
+            btnAddCustomer.FlatAppearance.BorderSize = 0;
+            btnAddCustomer.Click += (s, e) => OpenAddCustomerForm();
+            contentPanel.Controls.Add(btnAddCustomer);
+
+            // View Customers Button
+            Button btnViewCustomers = new Button();
+            btnViewCustomers.Text = "👥 View All Customers";
+            btnViewCustomers.Size = new Size(180, 45);
+            btnViewCustomers.Location = new Point(250, 90);
+            btnViewCustomers.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            btnViewCustomers.BackColor = Color.FromArgb(0, 123, 255); // Blue
+            btnViewCustomers.ForeColor = Color.White;
+            btnViewCustomers.FlatStyle = FlatStyle.Flat;
+            btnViewCustomers.FlatAppearance.BorderSize = 0;
+            btnViewCustomers.Click += (s, e) => OpenCustomerListForm();
+            contentPanel.Controls.Add(btnViewCustomers);
+
+            // Search Customers Button
+            Button btnSearchCustomers = new Button();
+            btnSearchCustomers.Text = "🔍 Search Customers";
+            btnSearchCustomers.Size = new Size(180, 45);
+            btnSearchCustomers.Location = new Point(450, 90);
+            btnSearchCustomers.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            btnSearchCustomers.BackColor = Color.FromArgb(108, 117, 125); // Gray
+            btnSearchCustomers.ForeColor = Color.White;
+            btnSearchCustomers.FlatStyle = FlatStyle.Flat;
+            btnSearchCustomers.FlatAppearance.BorderSize = 0;
+            btnSearchCustomers.Click += (s, e) => SearchCustomers();
+            contentPanel.Controls.Add(btnSearchCustomers);
+
+            // Recent Customers Panel
+            Panel recentPanel = new Panel();
+            recentPanel.Location = new Point(50, 160);
+            recentPanel.Size = new Size(700, 300);
+            recentPanel.BackColor = Color.White;
+            recentPanel.BorderStyle = BorderStyle.FixedSingle;
+
+            Label recentTitle = new Label();
+            recentTitle.Text = "Recent Customers";
+            recentTitle.Font = new Font("Segoe UI", 12, FontStyle.Bold);
+            recentTitle.Location = new Point(10, 10);
+            recentTitle.AutoSize = true;
+            recentPanel.Controls.Add(recentTitle);
+
+            // Add a placeholder message
+            Label lblPlaceholder = new Label();
+            lblPlaceholder.Text = "No recent customers found. Click 'View All Customers' to see the full list.";
+            lblPlaceholder.Font = new Font("Segoe UI", 10);
+            lblPlaceholder.Location = new Point(10, 40);
+            lblPlaceholder.AutoSize = true;
+            recentPanel.Controls.Add(lblPlaceholder);
+
+            contentPanel.Controls.Add(recentPanel);
         }
 
         private void ShowRentalManagement()
@@ -288,7 +347,114 @@ namespace Vehicle_Rental_Management_System.Forms
             contentPanel.Controls.Add(lblTitle);
         }
 
-        // Navigation methods that open other forms
+        // ============ CUSTOMER MANAGEMENT METHODS ============
+
+        private void OpenAddCustomerForm()
+        {
+            try
+            {
+                CustomerAddForm customerForm = new CustomerAddForm();
+                customerForm.StartPosition = FormStartPosition.CenterParent;
+
+                DialogResult result = customerForm.ShowDialog(this);
+
+                if (result == DialogResult.OK)
+                {
+                    MessageBox.Show("Customer added successfully!", "Success",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Refresh customer data if needed
+                    // RefreshCustomerData();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening customer form: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OpenCustomerListForm()
+        {
+            try
+            {
+                CustomerListForm listForm = new CustomerListForm();
+                listForm.StartPosition = FormStartPosition.CenterParent;
+                listForm.Show();
+                listForm.BringToFront();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening customer list: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void SearchCustomers()
+        {
+            // Create a simple search dialog
+            using (Form searchForm = new Form())
+            {
+                searchForm.Text = "Search Customers";
+                searchForm.Size = new Size(400, 200);
+                searchForm.StartPosition = FormStartPosition.CenterParent;
+                searchForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+
+                Label lblSearch = new Label();
+                lblSearch.Text = "Enter search term:";
+                lblSearch.Location = new Point(20, 30);
+                lblSearch.Size = new Size(150, 25);
+
+                TextBox txtSearch = new TextBox();
+                txtSearch.Location = new Point(180, 30);
+                txtSearch.Size = new Size(180, 25);
+                txtSearch.Focus();
+
+                Button btnSearch = new Button();
+                btnSearch.Text = "Search";
+                btnSearch.Location = new Point(120, 80);
+                btnSearch.Size = new Size(100, 30);
+                btnSearch.DialogResult = DialogResult.OK;
+
+                Button btnCancel = new Button();
+                btnCancel.Text = "Cancel";
+                btnCancel.Location = new Point(230, 80);
+                btnCancel.Size = new Size(100, 30);
+                btnCancel.DialogResult = DialogResult.Cancel;
+
+                searchForm.Controls.AddRange(new Control[] { lblSearch, txtSearch, btnSearch, btnCancel });
+
+                if (searchForm.ShowDialog(this) == DialogResult.OK && !string.IsNullOrWhiteSpace(txtSearch.Text))
+                {
+                    // Open customer list with search filter
+                    OpenCustomerListFormWithSearch(txtSearch.Text);
+                }
+            }
+        }
+
+        private void OpenCustomerListFormWithSearch(string searchTerm)
+        {
+            try
+            {
+                CustomerListForm listForm = new CustomerListForm();
+                listForm.StartPosition = FormStartPosition.CenterParent;
+                listForm.Show();
+                listForm.BringToFront();
+
+                // Note: You'll need to modify CustomerListForm to accept search terms
+                // For now, show a message
+                MessageBox.Show($"Searching for customers with: {searchTerm}", "Search",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // ============ VEHICLE MANAGEMENT METHODS ============
+
         private void OpenVehicleManagement()
         {
             VehicleManagementForm vehicleForm = new VehicleManagementForm();
@@ -297,7 +463,6 @@ namespace Vehicle_Rental_Management_System.Forms
 
         private void OpenAddVehicleForm()
         {
-            // Create or open Add Vehicle form
             MessageBox.Show("Open Add Vehicle Form");
         }
 
@@ -305,6 +470,8 @@ namespace Vehicle_Rental_Management_System.Forms
         {
             MessageBox.Show("Open Vehicle Search");
         }
+
+        // ============ UTILITY METHODS ============
 
         private void Logout()
         {
@@ -315,7 +482,8 @@ namespace Vehicle_Rental_Management_System.Forms
             }
         }
 
-        // Keep your existing event handlers (they can be empty or updated)
+        // ============ EVENT HANDLERS ============
+
         private void navButtonsPanel_Paint(object sender, PaintEventArgs e)
         {
             // Optional: Add custom painting if needed
@@ -323,7 +491,7 @@ namespace Vehicle_Rental_Management_System.Forms
 
         private void btnDashboard_Click(object sender, EventArgs e)
         {
-            // This will be handled by NavButton_Click, but you can keep it
+            // Handled by NavButton_Click
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -338,27 +506,27 @@ namespace Vehicle_Rental_Management_System.Forms
 
         private void btnVehicles_Click(object sender, EventArgs e)
         {
-            // This will be handled by NavButton_Click
+            // Handled by NavButton_Click
         }
 
         private void btnCustomers_Click(object sender, EventArgs e)
         {
-            // This will be handled by NavButton_Click
+            // Handled by NavButton_Click
         }
 
         private void btnRentals_Click(object sender, EventArgs e)
         {
-            // This will be handled by NavButton_Click
+            // Handled by NavButton_Click
         }
 
         private void btnReports_Click(object sender, EventArgs e)
         {
-            // This will be handled by NavButton_Click
+            // Handled by NavButton_Click
         }
 
         private void btnAdmin_Click(object sender, EventArgs e)
         {
-            // This will be handled by NavButton_Click
+            // Handled by NavButton_Click
         }
     }
 }

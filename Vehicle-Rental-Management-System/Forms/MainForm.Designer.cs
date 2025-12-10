@@ -64,7 +64,7 @@
             this.sidePanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.sidePanel.Location = new System.Drawing.Point(0, 0);
             this.sidePanel.Name = "sidePanel";
-            this.sidePanel.Size = new System.Drawing.Size(220, 450);
+            this.sidePanel.Size = new System.Drawing.Size(220, 510);
             this.sidePanel.TabIndex = 0;
             // 
             // contentPanel
@@ -72,7 +72,7 @@
             this.contentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.contentPanel.Location = new System.Drawing.Point(220, 0);
             this.contentPanel.Name = "contentPanel";
-            this.contentPanel.Size = new System.Drawing.Size(580, 450);
+            this.contentPanel.Size = new System.Drawing.Size(580, 510);
             this.contentPanel.TabIndex = 1;
             // 
             // headerPanel
@@ -124,7 +124,7 @@
             this.navButtonsPanel.Location = new System.Drawing.Point(0, 100);
             this.navButtonsPanel.Name = "navButtonsPanel";
             this.navButtonsPanel.Padding = new System.Windows.Forms.Padding(10);
-            this.navButtonsPanel.Size = new System.Drawing.Size(220, 350);
+            this.navButtonsPanel.Size = new System.Drawing.Size(220, 410);
             this.navButtonsPanel.TabIndex = 1;
             this.navButtonsPanel.WrapContents = false;
             this.navButtonsPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.navButtonsPanel_Paint);
@@ -139,7 +139,7 @@
             this.btnDashboard.Location = new System.Drawing.Point(10, 20);
             this.btnDashboard.Margin = new System.Windows.Forms.Padding(0, 10, 0, 0);
             this.btnDashboard.Name = "btnDashboard";
-            this.btnDashboard.Size = new System.Drawing.Size(178, 30);
+            this.btnDashboard.Size = new System.Drawing.Size(178, 40);
             this.btnDashboard.TabIndex = 0;
             this.btnDashboard.Text = "🏠 Dashboard";
             this.btnDashboard.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -152,10 +152,10 @@
             this.btnVehicles.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnVehicles.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnVehicles.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnVehicles.Location = new System.Drawing.Point(10, 60);
+            this.btnVehicles.Location = new System.Drawing.Point(10, 70);
             this.btnVehicles.Margin = new System.Windows.Forms.Padding(0, 10, 0, 0);
             this.btnVehicles.Name = "btnVehicles";
-            this.btnVehicles.Size = new System.Drawing.Size(178, 30);
+            this.btnVehicles.Size = new System.Drawing.Size(178, 40);
             this.btnVehicles.TabIndex = 1;
             this.btnVehicles.Text = "🚗 Vehicles";
             this.btnVehicles.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -168,10 +168,10 @@
             this.btnCustomers.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCustomers.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCustomers.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnCustomers.Location = new System.Drawing.Point(10, 100);
+            this.btnCustomers.Location = new System.Drawing.Point(10, 120);
             this.btnCustomers.Margin = new System.Windows.Forms.Padding(0, 10, 0, 0);
             this.btnCustomers.Name = "btnCustomers";
-            this.btnCustomers.Size = new System.Drawing.Size(178, 30);
+            this.btnCustomers.Size = new System.Drawing.Size(178, 40);
             this.btnCustomers.TabIndex = 2;
             this.btnCustomers.Text = "👥 Customers";
             this.btnCustomers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -184,10 +184,10 @@
             this.btnRentals.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRentals.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRentals.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnRentals.Location = new System.Drawing.Point(10, 140);
+            this.btnRentals.Location = new System.Drawing.Point(10, 170);
             this.btnRentals.Margin = new System.Windows.Forms.Padding(0, 10, 0, 0);
             this.btnRentals.Name = "btnRentals";
-            this.btnRentals.Size = new System.Drawing.Size(178, 30);
+            this.btnRentals.Size = new System.Drawing.Size(178, 40);
             this.btnRentals.TabIndex = 3;
             this.btnRentals.Text = "📋 Rentals";
             this.btnRentals.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -200,10 +200,10 @@
             this.btnReports.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnReports.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnReports.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnReports.Location = new System.Drawing.Point(10, 180);
+            this.btnReports.Location = new System.Drawing.Point(10, 220);
             this.btnReports.Margin = new System.Windows.Forms.Padding(0, 10, 0, 0);
             this.btnReports.Name = "btnReports";
-            this.btnReports.Size = new System.Drawing.Size(178, 30);
+            this.btnReports.Size = new System.Drawing.Size(178, 40);
             this.btnReports.TabIndex = 4;
             this.btnReports.Text = "📊 Reports";
             this.btnReports.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -216,10 +216,10 @@
             this.btnAdmin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAdmin.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAdmin.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnAdmin.Location = new System.Drawing.Point(10, 220);
+            this.btnAdmin.Location = new System.Drawing.Point(10, 270);
             this.btnAdmin.Margin = new System.Windows.Forms.Padding(0, 10, 0, 0);
             this.btnAdmin.Name = "btnAdmin";
-            this.btnAdmin.Size = new System.Drawing.Size(178, 30);
+            this.btnAdmin.Size = new System.Drawing.Size(178, 40);
             this.btnAdmin.TabIndex = 5;
             this.btnAdmin.Text = "👑 Admin";
             this.btnAdmin.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -233,10 +233,10 @@
             this.btnLogout.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLogout.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLogout.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnLogout.Location = new System.Drawing.Point(10, 260);
+            this.btnLogout.Location = new System.Drawing.Point(10, 320);
             this.btnLogout.Margin = new System.Windows.Forms.Padding(0, 10, 0, 0);
             this.btnLogout.Name = "btnLogout";
-            this.btnLogout.Size = new System.Drawing.Size(178, 30);
+            this.btnLogout.Size = new System.Drawing.Size(178, 40);
             this.btnLogout.TabIndex = 6;
             this.btnLogout.Text = " Logout";
             this.btnLogout.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -247,7 +247,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 510);
             this.Controls.Add(this.contentPanel);
             this.Controls.Add(this.sidePanel);
             this.Name = "MainForm";

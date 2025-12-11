@@ -10,8 +10,7 @@ namespace Vehicle_Rental_Management_System
         {
             InitializeComponent();
 
-            // --- MANUALLY FIX THE BUTTON CONNECTION ---
-            // This line guarantees the button works, ignoring Designer errors.
+           
             this.btnProceed.Click += new EventHandler(this.btnProceed_Click);
         }
 
@@ -24,8 +23,7 @@ namespace Vehicle_Rental_Management_System
         // The logic to open the Login Form
         private void btnProceed_Click(object sender, EventArgs e)
         {
-            // Debug message (You can remove this later once it works)
-            MessageBox.Show("Button connection active. Attempting to open Login...", "Debug");
+          
 
             ShowLoginForm();
         }
@@ -34,36 +32,25 @@ namespace Vehicle_Rental_Management_System
         {
             using (Forms.Login loginForm = new Forms.Login())
             {
-                // 1. Show the Login form and wait for it to close
                 loginForm.StartPosition = FormStartPosition.CenterParent;
+
+             
+
                 DialogResult result = loginForm.ShowDialog(this);
 
-                // 2. Check the signal we set in Step 1
                 if (result == DialogResult.OK)
                 {
-                    // A. Show the Confirmation Message
                     MessageBox.Show($"Login Successful!\nWelcome, {Program.CurrentUsername}.",
                                   "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // B. Hide the Welcome Screen
-                    this.Hide();
+                    this.Hide(); // We ONLY hide Welcome after successful login to show Main
 
-                    // C. Create and Show the Main Form
                     Forms.MainForm mainForm = new Forms.MainForm();
                     mainForm.Show();
-
-                    // D. Ensure the app closes when the Main Form is closed
                     mainForm.FormClosed += (s, args) => this.Close();
-                }
-                else
-                {
-                    // If they cancelled or failed, just stay on Welcome screen
-                    // No code needed here
                 }
             }
         }
-
-        // Allow pressing ENTER key to trigger the button
         private void Welcome_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)

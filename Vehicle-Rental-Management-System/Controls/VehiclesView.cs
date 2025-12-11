@@ -72,36 +72,28 @@ namespace Vehicle_Rental_Management_System.Controls // Or .Forms depending on wh
                 {
                     conn.Open();
 
-                    // UPDATED QUERY:
-                    // We use 'LEFT JOIN' to connect Vehicles (v) with VehicleCategories (c)
-                    // We select 'c.CategoryName' but nickname it 'Category' so the grid looks nice.
-                    string query = @"
-                SELECT 
-                    v.VehicleId, 
-                    v.Make, 
-                    v.Model, 
-                    v.Year, 
-                    v.LicensePlate, 
-                    c.CategoryName AS Category, 
-                    v.DailyRate, 
-                    v.Status 
-                FROM Vehicles v
-                LEFT JOIN VehicleCategories c ON v.CategoryId = c.CategoryId
-                ORDER BY v.VehicleId DESC";
-
-                    MySqlDataAdapter adapter = new MySqlDataAdapter(query, conn);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
-
-                    DataGridView dgv = this.Controls["dgvVehicles"] as DataGridView;
-                    if (dgv != null)
+                   
+                    using (MySqlCommand cmd = new MySqlCommand("sp_GetAllVehicles", conn))
                     {
-                        dgv.DataSource = dt;
+                       
+                        cmd.CommandType = CommandType.StoredProcedure;
 
-                        // Optional: Format the DailyRate column as Currency
-                        if (dgv.Columns["DailyRate"] != null)
+                        using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
                         {
-                            dgv.Columns["DailyRate"].DefaultCellStyle.Format = "C2"; // C2 = Currency with 2 decimals
+                            DataTable dt = new DataTable();
+                            adapter.Fill(dt);
+
+                            DataGridView dgv = this.Controls["dgvVehicles"] as DataGridView;
+                            if (dgv != null)
+                            {
+                                dgv.DataSource = dt;
+
+                                
+                                if (dgv.Columns["DailyRate"] != null)
+                                {
+                                    dgv.Columns["DailyRate"].DefaultCellStyle.Format = "C2";
+                                }
+                            }
                         }
                     }
                 }
@@ -114,13 +106,14 @@ namespace Vehicle_Rental_Management_System.Controls // Or .Forms depending on wh
 
         private void BtnAdd_Click(object sender, EventArgs e)
         {
-            // Opens the Add Form (We will build this next step)
-            // Forms.AddVehicleForm addForm = new Forms.AddVehicleForm();
-            // if (addForm.ShowDialog() == DialogResult.OK) 
-            // {
-            //     LoadVehicles(); // Refresh list after adding
-            // }
-            MessageBox.Show("Open Add Vehicle Form Here");
+            // Open the new form
+            Forms.AddVehicleForm addForm = new Forms.AddVehicleForm();
+
+            // If they saved successfully, reload the grid to show the new car
+            if (addForm.ShowDialog() == DialogResult.OK)
+            {
+                LoadVehicles();
+            }
         }
     }
 }

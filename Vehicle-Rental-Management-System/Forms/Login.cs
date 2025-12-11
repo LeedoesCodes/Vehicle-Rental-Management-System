@@ -12,9 +12,23 @@ namespace Vehicle_Rental_Management_System.Forms
             InitializeComponent();
             SetupForm();
 
-            // FIX 1: Manually connect the button to ensure it works
-            // This bypasses the Designer error you likely have
+            // --- FIX 1: Set "Enter" key to trigger Login globally ---
+            this.KeyPreview = true;
+            this.AcceptButton = btnLogin; 
+
+            // --- FIX 2: Manually connect Events (Guarantees they work) ---
+            
+            // Buttons
             this.btnLogin.Click += new EventHandler(this.btnLogin_Click);
+            if (this.btnGoToRegister != null)
+                this.btnGoToRegister.Click += new EventHandler(this.btnGoToRegister_Click);
+
+            // TextBoxes (This fixes the "next line" or "no reaction" issue)
+            if (this.txtUsername != null)
+                this.txtUsername.KeyPress += new KeyPressEventHandler(this.txtUsername_KeyPress);
+            
+            if (this.txtPassword != null)
+                this.txtPassword.KeyPress += new KeyPressEventHandler(this.txtPassword_KeyPress);
         }
 
         private void SetupForm()
@@ -29,7 +43,25 @@ namespace Vehicle_Rental_Management_System.Forms
             if (txtUsername != null) txtUsername.Focus();
         }
 
-        // This is the method that MUST run when you click Login
+        // --- NAVIGATION LOGIC ---
+        private void btnGoToRegister_Click(object sender, EventArgs e)
+        {
+            // 1. Hide the Login form so only Register (and Welcome) are visible
+            this.Hide();
+
+            using (Forms.RegisterForm registerForm = new Forms.RegisterForm())
+            {
+                registerForm.StartPosition = FormStartPosition.CenterParent;
+
+                // Show the Register form and wait for it to close
+                registerForm.ShowDialog(this);
+            }
+
+            // 2. When Register form closes, bring the Login form back
+            this.Show();
+            this.txtUsername.Focus();
+        }
+
         private void btnLogin_Click(object sender, EventArgs e)
         {
             PerformLogin();
@@ -49,18 +81,14 @@ namespace Vehicle_Rental_Management_System.Forms
             try
             {
                 Cursor = Cursors.WaitCursor;
-
                 var user = ValidateUserCredentials(username, password);
 
                 if (user != null)
                 {
-                    // FIX 2: Save to GLOBAL Program class
-                    // This ensures MainForm knows who is logged in
                     Program.CurrentUserId = user.Id;
                     Program.CurrentUsername = user.Username;
                     Program.CurrentUserRole = user.Role;
 
-                    // Tell the Welcome form that login was a success
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }
@@ -87,15 +115,12 @@ namespace Vehicle_Rental_Management_System.Forms
 
         private UserInfo ValidateUserCredentials(string username, string password)
         {
-            // 1. HARDCODED ADMIN (For testing)
             if (username == "admin" && password == "admin123")
             {
                 return new UserInfo { Id = 1, Username = "admin", Role = "Admin", FullName = "System Administrator" };
             }
 
-            // 2. DATABASE CHECK
             string connectionString = "Server=localhost;Database=vehicle_rental_db;Uid=root;Pwd=;";
-
             if (ConfigurationManager.ConnectionStrings["MySqlConnection"] != null)
                 connectionString = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
 
@@ -133,14 +158,26 @@ namespace Vehicle_Rental_Management_System.Forms
             this.Close();
         }
 
+        // KEY PRESS EVENTS
+        
+        // 1. Username Field: Pressing Enter moves focus to Password
         private void txtUsername_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == (char)Keys.Enter) { txtPassword.Focus(); e.Handled = true; }
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                e.Handled = true; // Prevents "Ding" sound
+                txtPassword.Focus(); 
+            }
         }
 
+        // 2. Password Field: Pressing Enter triggers Login
         private void txtPassword_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == (char)Keys.Enter) { PerformLogin(); e.Handled = true; }
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                e.Handled = true; // Prevents "Ding" sound
+                PerformLogin(); 
+            }
         }
 
         private class UserInfo

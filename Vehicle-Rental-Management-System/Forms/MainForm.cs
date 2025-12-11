@@ -171,23 +171,16 @@ namespace Vehicle_Rental_Management_System.Forms
 
         private void ShowDashboard()
         {
-            // Clear content panel
+            // 1. Clear current content
             contentPanel.Controls.Clear();
 
-            // Create welcome label
-            Label lblWelcome = new Label();
-            lblWelcome.Text = $"Welcome to Vehicle Rental Management System!\n\n" +
-                             $"Logged in as: {Program.CurrentUsername}\n" +
-                             $"Role: {Program.CurrentUserRole}";
-            lblWelcome.Font = new Font("Segoe UI", 14, FontStyle.Bold);
-            lblWelcome.AutoSize = true;
-            lblWelcome.Location = new Point(50, 50);
+            // 2. Load the Dashboard UserControl
+            // Ensure you have: using Vehicle_Rental_Management_System.Controls;
+            var dashboardView = new Controls.DashboardView();
+            dashboardView.Dock = DockStyle.Fill;
 
-            // Add to content panel
-            contentPanel.Controls.Add(lblWelcome);
-
-            // Add quick stats
-            AddQuickStats();
+            // 3. Add to panel
+            contentPanel.Controls.Add(dashboardView);
         }
 
         private void AddQuickStats()
@@ -235,7 +228,7 @@ namespace Vehicle_Rental_Management_System.Forms
         {
             contentPanel.Controls.Clear();
 
-            // Title
+            // 1. Title
             Label lblTitle = new Label();
             lblTitle.Text = "Customer Management";
             lblTitle.Font = new Font("Segoe UI", 16, FontStyle.Bold);
@@ -244,46 +237,44 @@ namespace Vehicle_Rental_Management_System.Forms
             lblTitle.Location = new Point(50, 30);
             contentPanel.Controls.Add(lblTitle);
 
-            // Add Customer Button
+            // 2. Buttons
             Button btnAddCustomer = new Button();
             btnAddCustomer.Text = "➕ Add New Customer";
             btnAddCustomer.Size = new Size(180, 45);
             btnAddCustomer.Location = new Point(50, 90);
             btnAddCustomer.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            btnAddCustomer.BackColor = Color.FromArgb(40, 167, 69); // Green
+            btnAddCustomer.BackColor = Color.FromArgb(40, 167, 69);
             btnAddCustomer.ForeColor = Color.White;
             btnAddCustomer.FlatStyle = FlatStyle.Flat;
             btnAddCustomer.FlatAppearance.BorderSize = 0;
             btnAddCustomer.Click += (s, e) => OpenAddCustomerForm();
             contentPanel.Controls.Add(btnAddCustomer);
 
-            // View Customers Button
             Button btnViewCustomers = new Button();
             btnViewCustomers.Text = "👥 View All Customers";
             btnViewCustomers.Size = new Size(180, 45);
             btnViewCustomers.Location = new Point(250, 90);
             btnViewCustomers.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            btnViewCustomers.BackColor = Color.FromArgb(0, 123, 255); // Blue
+            btnViewCustomers.BackColor = Color.FromArgb(0, 123, 255);
             btnViewCustomers.ForeColor = Color.White;
             btnViewCustomers.FlatStyle = FlatStyle.Flat;
             btnViewCustomers.FlatAppearance.BorderSize = 0;
             btnViewCustomers.Click += (s, e) => OpenCustomerListForm();
             contentPanel.Controls.Add(btnViewCustomers);
 
-            // Search Customers Button
             Button btnSearchCustomers = new Button();
             btnSearchCustomers.Text = "🔍 Search Customers";
             btnSearchCustomers.Size = new Size(180, 45);
             btnSearchCustomers.Location = new Point(450, 90);
             btnSearchCustomers.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            btnSearchCustomers.BackColor = Color.FromArgb(108, 117, 125); // Gray
+            btnSearchCustomers.BackColor = Color.FromArgb(108, 117, 125);
             btnSearchCustomers.ForeColor = Color.White;
             btnSearchCustomers.FlatStyle = FlatStyle.Flat;
             btnSearchCustomers.FlatAppearance.BorderSize = 0;
             btnSearchCustomers.Click += (s, e) => SearchCustomers();
             contentPanel.Controls.Add(btnSearchCustomers);
 
-            // Recent Customers Panel
+            // 3. Recent Customers Panel (NOW DYNAMIC)
             Panel recentPanel = new Panel();
             recentPanel.Location = new Point(50, 160);
             recentPanel.Size = new Size(700, 300);
@@ -291,34 +282,96 @@ namespace Vehicle_Rental_Management_System.Forms
             recentPanel.BorderStyle = BorderStyle.FixedSingle;
 
             Label recentTitle = new Label();
-            recentTitle.Text = "Recent Customers";
+            recentTitle.Text = "Recently Added Customers";
             recentTitle.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             recentTitle.Location = new Point(10, 10);
             recentTitle.AutoSize = true;
             recentPanel.Controls.Add(recentTitle);
 
-            // Add a placeholder message
-            Label lblPlaceholder = new Label();
-            lblPlaceholder.Text = "No recent customers found. Click 'View All Customers' to see the full list.";
-            lblPlaceholder.Font = new Font("Segoe UI", 10);
-            lblPlaceholder.Location = new Point(10, 40);
-            lblPlaceholder.AutoSize = true;
-            recentPanel.Controls.Add(lblPlaceholder);
+            // Call the helper method to load real data
+            LoadRecentCustomers(recentPanel);
 
             contentPanel.Controls.Add(recentPanel);
         }
 
+        // NEW HELPER METHOD TO FETCH DATA
+        private void LoadRecentCustomers(Panel container)
+        {
+            // Connection logic (matches your standard connection)
+            string connString = "Server=localhost;Database=vehicle_rental_db;Uid=root;Pwd=;";
+            if (System.Configuration.ConfigurationManager.ConnectionStrings["MySqlConnection"] != null)
+                connString = System.Configuration.ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
+
+            using (MySql.Data.MySqlClient.MySqlConnection conn = new MySql.Data.MySqlClient.MySqlConnection(connString))
+            {
+                try
+                {
+                    conn.Open();
+                    using (MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand("sp_GetRecentCustomers", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        using (MySql.Data.MySqlClient.MySqlDataAdapter adapter = new MySql.Data.MySqlClient.MySqlDataAdapter(cmd))
+                        {
+                            DataTable dt = new DataTable();
+                            adapter.Fill(dt);
+
+                            if (dt.Rows.Count > 0)
+                            {
+                                // Show Data in a Grid
+                                DataGridView dgv = new DataGridView();
+                                dgv.DataSource = dt;
+                                dgv.Location = new Point(10, 40);
+                                dgv.Size = new Size(680, 250);
+                                dgv.ReadOnly = true;
+                                dgv.AllowUserToAddRows = false;
+                                dgv.RowHeadersVisible = false;
+                                dgv.BorderStyle = BorderStyle.None;
+                                dgv.BackgroundColor = Color.White;
+                                dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                                container.Controls.Add(dgv);
+                            }
+                            else
+                            {
+                                // Only show this IF database is actually empty
+                                Label lblEmpty = new Label();
+                                lblEmpty.Text = "No customers found in database.";
+                                lblEmpty.ForeColor = Color.Gray;
+                                lblEmpty.Location = new Point(10, 40);
+                                lblEmpty.AutoSize = true;
+                                container.Controls.Add(lblEmpty);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Label lblError = new Label();
+                    lblError.Text = "Error loading data: " + ex.Message;
+                    lblError.ForeColor = Color.Red;
+                    lblError.Location = new Point(10, 40);
+                    lblError.AutoSize = true;
+                    container.Controls.Add(lblError);
+                }
+            }
+        }
+
+        // In MainForm.cs
+
         private void ShowRentalManagement()
         {
+            // 1. Clear the content panel
             contentPanel.Controls.Clear();
 
-            Label lblTitle = new Label();
-            lblTitle.Text = "Rental Management";
-            lblTitle.Font = new Font("Segoe UI", 16, FontStyle.Bold);
-            lblTitle.AutoSize = true;
-            lblTitle.Location = new Point(50, 30);
+            // 2. Create the View
+            // Ensure you have: using Vehicle_Rental_Management_System.Controls;
+            var rentalsView = new Controls.RentalsView();
 
-            contentPanel.Controls.Add(lblTitle);
+            // 3. Dock it to fill the space
+            rentalsView.Dock = DockStyle.Fill;
+
+            // 4. Add to panel
+            contentPanel.Controls.Add(rentalsView);
         }
 
         private void ShowReports()

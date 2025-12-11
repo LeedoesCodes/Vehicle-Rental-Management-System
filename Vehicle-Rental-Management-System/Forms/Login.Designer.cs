@@ -35,6 +35,7 @@
             this.btnLogin = new System.Windows.Forms.Button();
             this.btnExit = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
+            this.btnGoToRegister = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -109,11 +110,24 @@
             this.label3.TabIndex = 6;
             this.label3.Text = "Login your credentials";
             // 
+            // btnGoToRegister
+            // 
+            this.btnGoToRegister.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.btnGoToRegister.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.btnGoToRegister.Location = new System.Drawing.Point(159, 312);
+            this.btnGoToRegister.Name = "btnGoToRegister";
+            this.btnGoToRegister.Size = new System.Drawing.Size(141, 34);
+            this.btnGoToRegister.TabIndex = 7;
+            this.btnGoToRegister.Text = "Create an Account";
+            this.btnGoToRegister.UseVisualStyleBackColor = false;
+            
+            // 
             // Login
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(465, 539);
+            this.Controls.Add(this.btnGoToRegister);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnLogin);
@@ -137,5 +151,6 @@
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button btnGoToRegister;
     }
 }

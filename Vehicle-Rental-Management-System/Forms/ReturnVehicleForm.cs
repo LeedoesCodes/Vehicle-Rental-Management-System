@@ -17,7 +17,7 @@ namespace Vehicle_Rental_Management_System.Forms
         private int _rentalId;
         private int _vehicleId;
 
-        // Constructor requires ID and Name to initialize
+ 
         public ReturnVehicleForm(int rentalId, int vehicleId, string vehicleName, string customerName)
         {
             InitializeComponent();

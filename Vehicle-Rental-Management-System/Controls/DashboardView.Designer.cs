@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.pnlCards = new System.Windows.Forms.FlowLayoutPanel();
             this.pnlCardTotal = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
@@ -309,29 +309,29 @@
             // 
             // chartRevenue
             // 
-            chartArea3.Name = "ChartArea1";
-            this.chartRevenue.ChartAreas.Add(chartArea3);
+            chartArea1.Name = "ChartArea1";
+            this.chartRevenue.ChartAreas.Add(chartArea1);
             this.chartRevenue.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend3.Name = "Legend1";
-            this.chartRevenue.Legends.Add(legend3);
+            legend1.Name = "Legend1";
+            this.chartRevenue.Legends.Add(legend1);
             this.chartRevenue.Location = new System.Drawing.Point(23, 62);
             this.chartRevenue.Name = "chartRevenue";
-            series5.ChartArea = "ChartArea1";
-            series5.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            series5.CustomProperties = "PointWidth=0.6";
-            series5.IsValueShownAsLabel = true;
-            series5.LabelFormat = "C0";
-            series5.Legend = "Legend1";
-            series5.LegendText = "MainArea";
-            series5.Name = "MainArea";
-            series6.ChartArea = "ChartArea1";
-            series6.CustomProperties = "PointWidth=0.6";
-            series6.IsValueShownAsLabel = true;
-            series6.LabelFormat = "C0";
-            series6.Legend = "Legend1";
-            series6.Name = "Revenue";
-            this.chartRevenue.Series.Add(series5);
-            this.chartRevenue.Series.Add(series6);
+            series1.ChartArea = "ChartArea1";
+            series1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            series1.CustomProperties = "PointWidth=0.6";
+            series1.IsValueShownAsLabel = true;
+            series1.LabelFormat = "C0";
+            series1.Legend = "Legend1";
+            series1.LegendText = "MainArea";
+            series1.Name = "MainArea";
+            series2.ChartArea = "ChartArea1";
+            series2.CustomProperties = "PointWidth=0.6";
+            series2.IsValueShownAsLabel = true;
+            series2.LabelFormat = "C0";
+            series2.Legend = "Legend1";
+            series2.Name = "Revenue";
+            this.chartRevenue.Series.Add(series1);
+            this.chartRevenue.Series.Add(series2);
             this.chartRevenue.Size = new System.Drawing.Size(328, 269);
             this.chartRevenue.TabIndex = 0;
             this.chartRevenue.Text = "chart1";

@@ -206,6 +206,9 @@
     <EmbeddedResource Include="Controls\NavButton.resx">
       <DependentUpon>NavButton.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\VehiclesView.resx">
+      <DependentUpon>VehiclesView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
     </EmbeddedResource>
@@ -214,6 +217,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\RegisterForm.resx">
       <DependentUpon>RegisterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ReturnVehicleForm.resx">
+      <DependentUpon>ReturnVehicleForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Welcome.resx">
       <DependentUpon>Welcome.cs</DependentUpon>

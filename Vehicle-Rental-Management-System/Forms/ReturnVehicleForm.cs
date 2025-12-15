@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using MySql.Data.MySqlClient;
+using System;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
-using System.Configuration;
 
 namespace Vehicle_Rental_Management_System.Forms
 {
@@ -17,7 +12,6 @@ namespace Vehicle_Rental_Management_System.Forms
         private int _rentalId;
         private int _vehicleId;
 
- 
         public ReturnVehicleForm(int rentalId, int vehicleId, string vehicleName, string customerName)
         {
             InitializeComponent();
@@ -25,48 +19,24 @@ namespace Vehicle_Rental_Management_System.Forms
             _rentalId = rentalId;
             _vehicleId = vehicleId;
 
-            SetupForm(vehicleName, customerName);
+            // Set the labels with actual data
+            lblVehicleInfo.Text = $"Returning: {vehicleName}";
+            lblCustomerInfo.Text = $"Customer: {customerName}";
+
+            // Set default date
+            dtReturns.Value = DateTime.Now;
+
+            // Set default fuel level
+            cbFuels.SelectedIndex = 4; // "Full"
         }
 
-        private void SetupForm(string vehicleName, string customerName)
+        private void btnConfirm_Click(object sender, EventArgs e)
         {
-            this.Text = "Process Return";
-            this.Size = new Size(400, 500);
-            this.StartPosition = FormStartPosition.CenterParent;
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-
-            // Info Labels
-            CreateLabel($"Returning: {vehicleName}", 20, 20, true);
-            CreateLabel($"Customer: {customerName}", 20, 45, false);
-
-            // Input Fields
-            CreateLabel("Return Date:", 20, 90, false);
-            dtReturn = new DateTimePicker { Location = new Point(20, 115), Size = new Size(340, 30), Format = DateTimePickerFormat.Short, Value = DateTime.Now };
-
-            CreateLabel("Final Odometer Reading:", 20, 160, false);
-            txtOdometer = new TextBox { Location = new Point(20, 185), Size = new Size(340, 30) };
-
-            CreateLabel("Fuel Level:", 20, 230, false);
-            cbFuel = new ComboBox { Location = new Point(20, 255), Size = new Size(340, 30), DropDownStyle = ComboBoxStyle.DropDownList };
-            cbFuel.Items.AddRange(new string[] { "Empty", "1/4", "1/2", "3/4", "Full" });
-            cbFuel.SelectedIndex = 4;
-
-            CreateLabel("Final Condition / Notes:", 20, 300, false);
-            txtCondition = new TextBox { Location = new Point(20, 325), Size = new Size(340, 60), Multiline = true };
-
-            // Buttons
-            btnConfirm = new Button { Text = "Complete Return", Location = new Point(190, 400), Size = new Size(170, 45), BackColor = Color.FromArgb(0, 120, 215), ForeColor = Color.White, FlatStyle = FlatStyle.Flat, DialogResult = DialogResult.None };
-            btnCancel = new Button { Text = "Cancel", Location = new Point(20, 400), Size = new Size(150, 45), BackColor = Color.IndianRed, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, DialogResult = DialogResult.Cancel };
-
-            btnConfirm.Click += BtnConfirm_Click;
-
-            this.Controls.AddRange(new Control[] { dtReturn, txtOdometer, cbFuel, txtCondition, btnConfirm, btnCancel });
-        }
-
-        private void BtnConfirm_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(txtOdometer.Text)) { MessageBox.Show("Please enter the final odometer reading."); return; }
+            if (string.IsNullOrEmpty(txtOdometers.Text))
+            {
+                MessageBox.Show("Please enter the final odometer reading.");
+                return;
+            }
 
             string connString = ConfigurationManager.ConnectionStrings["MySqlConnection"]?.ConnectionString ?? "Server=localhost;Database=vehicle_rental_db;Uid=root;Pwd=;";
 
@@ -81,10 +51,10 @@ namespace Vehicle_Rental_Management_System.Forms
 
                         cmd.Parameters.AddWithValue("@p_RentalId", _rentalId);
                         cmd.Parameters.AddWithValue("@p_VehicleId", _vehicleId);
-                        cmd.Parameters.AddWithValue("@p_ReturnDate", dtReturn.Value);
-                        cmd.Parameters.AddWithValue("@p_OdometerEnd", Convert.ToDecimal(txtOdometer.Text));
-                        cmd.Parameters.AddWithValue("@p_FuelLevelEnd", cbFuel.SelectedItem.ToString());
-                        cmd.Parameters.AddWithValue("@p_FinalCondition", txtCondition.Text);
+                        cmd.Parameters.AddWithValue("@p_ReturnDate", dtReturns.Value);
+                        cmd.Parameters.AddWithValue("@p_OdometerEnd", Convert.ToDecimal(txtOdometers.Text));
+                        cmd.Parameters.AddWithValue("@p_FuelLevelEnd", cbFuels.SelectedItem.ToString());
+                        cmd.Parameters.AddWithValue("@p_FinalCondition", txtConditions.Text);
 
                         cmd.ExecuteNonQuery();
                     }
@@ -100,17 +70,12 @@ namespace Vehicle_Rental_Management_System.Forms
             }
         }
 
-        private void CreateLabel(string text, int x, int y, bool isBold)
+        private void btnCancel_Click(object sender, EventArgs e)
         {
-            Label lbl = new Label { Text = text, Location = new Point(x, y), AutoSize = true, Font = new Font("Segoe UI", isBold ? 11 : 9, isBold ? FontStyle.Bold : FontStyle.Regular) };
-            this.Controls.Add(lbl);
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
         }
 
-        private DateTimePicker dtReturn;
-        private TextBox txtOdometer;
-        private ComboBox cbFuel;
-        private TextBox txtCondition;
-        private Button btnConfirm;
-        private Button btnCancel;
+        // Remove any other methods that create controls dynamically
     }
 }

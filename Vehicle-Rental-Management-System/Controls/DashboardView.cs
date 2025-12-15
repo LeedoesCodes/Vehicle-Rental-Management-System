@@ -1,10 +1,11 @@
-﻿using System;
-using System.Drawing;
-using System.Data;
-using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting; // Works after adding reference
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Configuration;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace Vehicle_Rental_Management_System.Controls
 {
@@ -13,91 +14,57 @@ namespace Vehicle_Rental_Management_System.Controls
         public DashboardView()
         {
             InitializeComponent();
-            SetupUI();
+            
+            // Configure chart axes
+            ConfigureChartAxes();
+            
+            // Initialize card hover effects
+            InitializeCardEvents();
+            
+            // Load data from database
             LoadData();
         }
 
-        private void SetupUI()
+        private void ConfigureChartAxes()
         {
-            this.Dock = DockStyle.Fill;
-            this.BackColor = Color.WhiteSmoke;
-            this.AutoScroll = true;
-
-            // 1. TOP PANEL (Cards)
-            FlowLayoutPanel cardsPanel = new FlowLayoutPanel();
-            cardsPanel.Dock = DockStyle.Top;
-            cardsPanel.Height = 160;
-            cardsPanel.Padding = new Padding(10);
-            cardsPanel.FlowDirection = FlowDirection.LeftToRight;
-            cardsPanel.AutoSize = false;
-            cardsPanel.Name = "pnlCards";
-            this.Controls.Add(cardsPanel);
-
-            // 2. BOTTOM PANEL (Split: Chart Left, Grid Right)
-            TableLayoutPanel bottomSplit = new TableLayoutPanel();
-            bottomSplit.Dock = DockStyle.Fill;
-            bottomSplit.ColumnCount = 2;
-            bottomSplit.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            bottomSplit.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            bottomSplit.Padding = new Padding(10);
-            this.Controls.Add(bottomSplit);
-
-            // --- CHART SECTION (FIXED) ---
-            Panel chartContainer = new Panel { Dock = DockStyle.Fill, BackColor = Color.White, Padding = new Padding(10) };
-
-            Chart revenueChart = new Chart();
-            revenueChart.Dock = DockStyle.Fill;
-            revenueChart.Name = "chartRevenue";
-
-            // A. Add Chart Area
-            ChartArea area = new ChartArea("MainArea");
-            revenueChart.ChartAreas.Add(area);
-
-            // B. FIX: Turn on the Legend
-            Legend legend = new Legend("MainLegend");
-            legend.Docking = Docking.Top; // Put legend at the top
-            revenueChart.Legends.Add(legend);
-
-            // C. Add Series and configure Labels
-            Series series = new Series("Revenue");
-            series.ChartType = SeriesChartType.Column;
-            series.Color = Color.FromArgb(0, 120, 215);
-            series.IsValueShownAsLabel = true; // Show the numbers on top of the bars
-            series.LabelFormat = "C0";         // Format labels as Currency (₱)
-            revenueChart.Series.Add(series);
-
-            // D. FIX: Add Axis Titles
-            area.AxisX.Title = "Month";
-            area.AxisX.Interval = 1; // Ensure every month shows up
-            area.AxisY.Title = "Amount (PHP)";
-            area.AxisY.LabelStyle.Format = "C0"; // Format Y-axis numbers as currency
-
-            // Add Title
-            revenueChart.Titles.Add("Monthly Revenue Trend (This Year)");
-
-            chartContainer.Controls.Add(revenueChart);
-            bottomSplit.Controls.Add(chartContainer, 0, 0);
-
-            // --- OVERDUE GRID SECTION ---
-            Panel gridContainer = new Panel { Dock = DockStyle.Fill, BackColor = Color.White, Padding = new Padding(10) };
-            Label lblGridTitle = new Label { Text = "⚠️ Overdue Returns", Dock = DockStyle.Top, Font = new Font("Segoe UI", 12, FontStyle.Bold), Height = 30, ForeColor = Color.IndianRed };
-
-            DataGridView dgvOverdue = new DataGridView();
-            dgvOverdue.Name = "dgvOverdue";
-            dgvOverdue.Dock = DockStyle.Fill;
-            dgvOverdue.BackgroundColor = Color.White;
-            dgvOverdue.BorderStyle = BorderStyle.None;
-            dgvOverdue.RowHeadersVisible = false;
-            dgvOverdue.AllowUserToAddRows = false;
-            dgvOverdue.ReadOnly = true;
-            dgvOverdue.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
-            gridContainer.Controls.Add(dgvOverdue);
-            gridContainer.Controls.Add(lblGridTitle);
-            bottomSplit.Controls.Add(gridContainer, 1, 0);
-
-            // Ensure cards panel is on top
-            cardsPanel.BringToFront();
+            try
+            {
+                // Configure X-Axis
+                if (chartRevenue.ChartAreas.Count > 0)
+                {
+                    ChartArea area = chartRevenue.ChartAreas[0];
+                    
+                    // X-Axis Configuration
+                    area.AxisX.Title = "Month";
+                    area.AxisX.TitleFont = new Font("Segoe UI", 10, FontStyle.Bold);
+                    area.AxisX.Interval = 1;
+                    area.AxisX.MajorGrid.LineColor = Color.LightGray;
+                    area.AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dot;
+                    area.AxisX.LabelStyle.Font = new Font("Segoe UI", 9);
+                    
+                    // Y-Axis Configuration
+                    area.AxisY.Title = "Amount (PHP)";
+                    area.AxisY.TitleFont = new Font("Segoe UI", 10, FontStyle.Bold);
+                    area.AxisY.LabelStyle.Format = "C0";
+                    area.AxisY.MajorGrid.LineColor = Color.LightGray;
+                    area.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dot;
+                    area.AxisY.LabelStyle.Font = new Font("Segoe UI", 9);
+                }
+                
+                // Ensure series exists and is configured
+                if (chartRevenue.Series.Count > 0 && chartRevenue.Series["Revenue"] != null)
+                {
+                    chartRevenue.Series["Revenue"].Color = Color.FromArgb(0, 120, 215);
+                    chartRevenue.Series["Revenue"].IsValueShownAsLabel = true;
+                    chartRevenue.Series["Revenue"].LabelFormat = "C0";
+                    chartRevenue.Series["Revenue"]["PointWidth"] = "0.6";
+                    chartRevenue.Series["Revenue"].Font = new Font("Segoe UI", 9);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error configuring chart: " + ex.Message);
+            }
         }
 
         private void LoadData()
@@ -112,7 +79,7 @@ namespace Vehicle_Rental_Management_System.Controls
                 {
                     conn.Open();
 
-                    // --- 1. LOAD STATS (Counters) ---
+                    // --- 1. LOAD STATS AND UPDATE MANUAL CARDS ---
                     using (MySqlCommand cmd = new MySqlCommand("sp_GetDashboardStats", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
@@ -120,14 +87,12 @@ namespace Vehicle_Rental_Management_System.Controls
                         {
                             if (reader.Read())
                             {
-                                var pnlCards = this.Controls["pnlCards"] as FlowLayoutPanel;
-                                pnlCards.Controls.Clear();
-
-                                AddCard(pnlCards, "Total Fleet", reader["TotalVehicles"].ToString(), Color.FromArgb(64, 64, 64));
-                                AddCard(pnlCards, "Available", reader["AvailableVehicles"].ToString(), Color.FromArgb(40, 167, 69));
-                                AddCard(pnlCards, "Rented Out", reader["RentedVehicles"].ToString(), Color.FromArgb(0, 120, 215));
-                                AddCard(pnlCards, "Revenue (Month)", $"₱{reader["RevenueMonth"]:N0}", Color.FromArgb(108, 117, 125));
-                                AddCard(pnlCards, "Overdue", reader["OverdueCount"].ToString(), Color.FromArgb(220, 53, 69));
+                                // Update each manual card with database values
+                                lblTotalValue.Text = reader["TotalVehicles"].ToString();
+                                lblAvailableValue.Text = reader["AvailableVehicles"].ToString();
+                                lblRentedValue.Text = reader["RentedVehicles"].ToString();
+                                lblRevenueValue.Text = $"₱{Convert.ToDecimal(reader["RevenueMonth"]):N0}";
+                                lblOverdueValue.Text = reader["OverdueCount"].ToString();
                             }
                         }
                     }
@@ -139,24 +104,21 @@ namespace Vehicle_Rental_Management_System.Controls
                         MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
                         DataTable dt = new DataTable();
                         adapter.Fill(dt);
-
-                        // Find the grid inside the nested panels
-                        var bottomSplit = this.Controls[1] as TableLayoutPanel;
-                        var gridContainer = bottomSplit.Controls[1] as Panel;
-                        var dgv = gridContainer.Controls["dgvOverdue"] as DataGridView;
-                        dgv.DataSource = dt;
+                        dgvOverdue.DataSource = dt;
+                        StyleDataGridView(); // Style after data loads
                     }
 
-                    // --- 3. REAL DATA FOR CHART (Replaced Dummy Data) ---
-                    var chartPanel = (this.Controls[1] as TableLayoutPanel).Controls[0] as Panel;
-                    var chart = chartPanel.Controls["chartRevenue"] as Chart;
-
-                    // Clear old points
-                    chart.Series["Revenue"].Points.Clear();
-
+                    // --- 3. LOAD CHART DATA ---
                     using (MySqlCommand cmd = new MySqlCommand("sp_GetMonthlyRevenue", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
+                        
+                        // Clear existing chart data
+                        if (chartRevenue.Series["Revenue"] != null)
+                        {
+                            chartRevenue.Series["Revenue"].Points.Clear();
+                        }
+                        
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             bool hasData = false;
@@ -164,16 +126,16 @@ namespace Vehicle_Rental_Management_System.Controls
                             {
                                 hasData = true;
                                 string month = reader["MonthName"].ToString();
-                                decimal amount = Convert.ToDecimal(reader["TotalRevenue"]); // Matches the fix I gave you
-
-                                // Add real point
-                                chart.Series["Revenue"].Points.AddXY(month, amount);
+                                decimal amount = Convert.ToDecimal(reader["TotalRevenue"]);
+                                chartRevenue.Series["Revenue"].Points.AddXY(month, amount);
                             }
 
                             if (!hasData)
                             {
-                                // Optional: Add a "No Data" placeholder or just leave empty
-                                chart.Titles[0].Text += " (No Data Yet)";
+                                if (chartRevenue.Titles.Count > 0)
+                                {
+                                    chartRevenue.Titles[0].Text += " (No Data Yet)";
+                                }
                             }
                         }
                     }
@@ -185,32 +147,116 @@ namespace Vehicle_Rental_Management_System.Controls
             }
         }
 
-        private void AddCard(FlowLayoutPanel panel, string title, string value, Color color)
+        // Remove the AddCard method since we're using manual cards
+        // private void AddCard(FlowLayoutPanel panel, string title, string value, Color color) { }
+
+        // For rounded corners (keep if you want rounded cards)
+        [System.Runtime.InteropServices.DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+        private static extern IntPtr CreateRoundRectRgn(
+            int nLeftRect, int nTopRect, int nRightRect, int nBottomRect,
+            int nWidthEllipse, int nHeightEllipse);
+
+        // Add hover effect to manual cards
+        private void InitializeCardEvents()
         {
-            Panel card = new Panel();
-            card.Size = new Size(200, 120);
-            card.BackColor = color;
-            card.Margin = new Padding(10);
+            try
+            {
+                // List of all card panels (use the names from your designer)
+                Panel[] cards = { 
+                    pnlCardTotal, 
+                    pnlCardAvailable, 
+                    pnlCardRented, 
+                    pnlCardRevenue, 
+                    pnlCardOverdue 
+                };
+                
+                foreach (Panel card in cards)
+                {
+                    if (card != null)
+                    {
+                        Color originalColor = card.BackColor;
+                        
+                        card.MouseEnter += (sender, e) =>
+                        {
+                            card.BackColor = ControlPaint.Light(originalColor, 0.1f);
+                            card.Cursor = Cursors.Hand;
+                        };
+                        
+                        card.MouseLeave += (sender, e) =>
+                        {
+                            card.BackColor = originalColor;
+                        };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Silent fail - cards might not be initialized yet
+                Console.WriteLine("Error initializing card events: " + ex.Message);
+            }
+        }
 
-            Label lblValue = new Label();
-            lblValue.Text = value;
-            lblValue.Font = new Font("Segoe UI", 24, FontStyle.Bold);
-            lblValue.ForeColor = Color.White;
-            lblValue.AutoSize = false;
-            lblValue.Dock = DockStyle.Fill;
-            lblValue.TextAlign = ContentAlignment.MiddleCenter;
+        // Style the DataGridView
+        private void StyleDataGridView()
+        {
+            if (dgvOverdue != null && dgvOverdue.Columns.Count > 0)
+            {
+                // Style headers
+                dgvOverdue.EnableHeadersVisualStyles = false;
+                dgvOverdue.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(220, 53, 69);
+                dgvOverdue.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+                dgvOverdue.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+                dgvOverdue.ColumnHeadersHeight = 40;
 
-            Label lblTitle = new Label();
-            lblTitle.Text = title;
-            lblTitle.Font = new Font("Segoe UI", 10, FontStyle.Regular);
-            lblTitle.ForeColor = Color.WhiteSmoke;
-            lblTitle.Dock = DockStyle.Top;
-            lblTitle.Height = 30;
-            lblTitle.TextAlign = ContentAlignment.MiddleCenter;
+                // Style rows
+                dgvOverdue.RowTemplate.Height = 35;
+                dgvOverdue.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 249, 250);
 
-            card.Controls.Add(lblValue);
-            card.Controls.Add(lblTitle);
-            panel.Controls.Add(card);
+                // Style selection
+                dgvOverdue.DefaultCellStyle.SelectionBackColor = Color.FromArgb(200, 229, 255);
+                dgvOverdue.DefaultCellStyle.SelectionForeColor = Color.Black;
+
+                // Center text in cells
+                foreach (DataGridViewColumn column in dgvOverdue.Columns)
+                {
+                    column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+                    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                }
+            }
+        }
+
+        // Refresh button click (add a refresh button to your form if needed)
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            LoadData();
+        }
+
+        // Optional: Add this if you want rounded corners on cards
+        private void ApplyRoundedCornersToCards()
+        {
+            try
+            {
+                Panel[] cards = { pnlCardTotal, pnlCardAvailable, pnlCardRented, pnlCardRevenue, pnlCardOverdue };
+                
+                foreach (Panel card in cards)
+                {
+                    if (card != null)
+                    {
+                        card.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, card.Width, card.Height, 15, 15));
+                    }
+                }
+            }
+            catch
+            {
+                // If it fails, cards will have square corners (no problem)
+            }
+        }
+
+        private void DashboardView_Load(object sender, EventArgs e)
+        {
+            // Apply styling when control loads
+            StyleDataGridView();
+            ApplyRoundedCornersToCards(); // Optional
         }
     }
 }

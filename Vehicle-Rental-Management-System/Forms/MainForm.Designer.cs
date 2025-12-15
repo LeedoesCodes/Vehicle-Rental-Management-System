@@ -63,7 +63,7 @@
             this.sidePanel.Controls.Add(this.headerPanel);
             this.sidePanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.sidePanel.Location = new System.Drawing.Point(0, 0);
-            this.sidePanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.sidePanel.Margin = new System.Windows.Forms.Padding(4);
             this.sidePanel.Name = "sidePanel";
             this.sidePanel.Size = new System.Drawing.Size(293, 628);
             this.sidePanel.TabIndex = 0;
@@ -81,7 +81,7 @@
             this.navButtonsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.navButtonsPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.navButtonsPanel.Location = new System.Drawing.Point(0, 123);
-            this.navButtonsPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.navButtonsPanel.Margin = new System.Windows.Forms.Padding(4);
             this.navButtonsPanel.Name = "navButtonsPanel";
             this.navButtonsPanel.Padding = new System.Windows.Forms.Padding(13, 12, 13, 12);
             this.navButtonsPanel.Size = new System.Drawing.Size(293, 505);
@@ -210,7 +210,7 @@
             this.headerPanel.Controls.Add(this.logoPictureBox);
             this.headerPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.headerPanel.Location = new System.Drawing.Point(0, 0);
-            this.headerPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.headerPanel.Margin = new System.Windows.Forms.Padding(4);
             this.headerPanel.Name = "headerPanel";
             this.headerPanel.Size = new System.Drawing.Size(293, 123);
             this.headerPanel.TabIndex = 0;
@@ -233,7 +233,7 @@
             // 
             this.logoPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("logoPictureBox.Image")));
             this.logoPictureBox.Location = new System.Drawing.Point(20, 18);
-            this.logoPictureBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.logoPictureBox.Margin = new System.Windows.Forms.Padding(4);
             this.logoPictureBox.Name = "logoPictureBox";
             this.logoPictureBox.Size = new System.Drawing.Size(67, 62);
             this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -244,7 +244,7 @@
             // 
             this.contentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.contentPanel.Location = new System.Drawing.Point(293, 0);
-            this.contentPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.contentPanel.Margin = new System.Windows.Forms.Padding(4);
             this.contentPanel.Name = "contentPanel";
             this.contentPanel.Size = new System.Drawing.Size(774, 628);
             this.contentPanel.TabIndex = 1;
@@ -256,7 +256,7 @@
             this.ClientSize = new System.Drawing.Size(1067, 628);
             this.Controls.Add(this.contentPanel);
             this.Controls.Add(this.sidePanel);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Vehicle Rental System";

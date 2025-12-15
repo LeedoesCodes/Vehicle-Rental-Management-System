@@ -209,6 +209,9 @@
     <EmbeddedResource Include="Controls\VehiclesView.resx">
       <DependentUpon>VehiclesView.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AddVehicleForm.resx">
+      <DependentUpon>AddVehicleForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
     </EmbeddedResource>

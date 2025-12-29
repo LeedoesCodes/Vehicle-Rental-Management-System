@@ -95,7 +95,7 @@
             this.panel1.Controls.Add(this.txtMake);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Location = new System.Drawing.Point(15, 57);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(195, 309);
             this.panel1.TabIndex = 1;
@@ -105,13 +105,13 @@
             this.cbCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbCategory.FormattingEnabled = true;
             this.cbCategory.Items.AddRange(new object[] {
-            "Sedan",
-            "Pick-up",
             "Hatchback",
+            "Sedan",
             "SUV",
+            "Pick-up",
             "Van/Minibus"});
             this.cbCategory.Location = new System.Drawing.Point(8, 242);
-            this.cbCategory.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbCategory.Margin = new System.Windows.Forms.Padding(2);
             this.cbCategory.Name = "cbCategory";
             this.cbCategory.Size = new System.Drawing.Size(181, 21);
             this.cbCategory.TabIndex = 11;
@@ -130,7 +130,7 @@
             // txtPlate
             // 
             this.txtPlate.Location = new System.Drawing.Point(8, 203);
-            this.txtPlate.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtPlate.Margin = new System.Windows.Forms.Padding(2);
             this.txtPlate.Name = "txtPlate";
             this.txtPlate.Size = new System.Drawing.Size(181, 20);
             this.txtPlate.TabIndex = 9;
@@ -149,7 +149,7 @@
             // txtColor
             // 
             this.txtColor.Location = new System.Drawing.Point(8, 164);
-            this.txtColor.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtColor.Margin = new System.Windows.Forms.Padding(2);
             this.txtColor.Name = "txtColor";
             this.txtColor.Size = new System.Drawing.Size(181, 20);
             this.txtColor.TabIndex = 7;
@@ -168,7 +168,7 @@
             // numYear
             // 
             this.numYear.Location = new System.Drawing.Point(8, 118);
-            this.numYear.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.numYear.Margin = new System.Windows.Forms.Padding(2);
             this.numYear.Maximum = new decimal(new int[] {
             2100,
             0,
@@ -202,7 +202,7 @@
             // txtModel
             // 
             this.txtModel.Location = new System.Drawing.Point(8, 71);
-            this.txtModel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtModel.Margin = new System.Windows.Forms.Padding(2);
             this.txtModel.Name = "txtModel";
             this.txtModel.Size = new System.Drawing.Size(181, 20);
             this.txtModel.TabIndex = 3;
@@ -221,7 +221,7 @@
             // txtMake
             // 
             this.txtMake.Location = new System.Drawing.Point(8, 28);
-            this.txtMake.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtMake.Margin = new System.Windows.Forms.Padding(2);
             this.txtMake.Name = "txtMake";
             this.txtMake.Size = new System.Drawing.Size(181, 20);
             this.txtMake.TabIndex = 1;
@@ -253,7 +253,7 @@
             this.panel2.Controls.Add(this.numRate);
             this.panel2.Controls.Add(this.label6);
             this.panel2.Location = new System.Drawing.Point(226, 57);
-            this.panel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(195, 309);
             this.panel2.TabIndex = 2;
@@ -261,7 +261,7 @@
             // txtVIN
             // 
             this.txtVIN.Location = new System.Drawing.Point(8, 244);
-            this.txtVIN.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtVIN.Margin = new System.Windows.Forms.Padding(2);
             this.txtVIN.Name = "txtVIN";
             this.txtVIN.Size = new System.Drawing.Size(181, 20);
             this.txtVIN.TabIndex = 20;
@@ -280,7 +280,7 @@
             // numMileage
             // 
             this.numMileage.Location = new System.Drawing.Point(8, 204);
-            this.numMileage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.numMileage.Margin = new System.Windows.Forms.Padding(2);
             this.numMileage.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -304,7 +304,7 @@
             // numSeats
             // 
             this.numSeats.Location = new System.Drawing.Point(8, 158);
-            this.numSeats.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.numSeats.Margin = new System.Windows.Forms.Padding(2);
             this.numSeats.Maximum = new decimal(new int[] {
             50,
             0,
@@ -345,7 +345,7 @@
             "Electric",
             "Hybrid"});
             this.cbFuel.Location = new System.Drawing.Point(8, 118);
-            this.cbFuel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbFuel.Margin = new System.Windows.Forms.Padding(2);
             this.cbFuel.Name = "cbFuel";
             this.cbFuel.Size = new System.Drawing.Size(181, 21);
             this.cbFuel.TabIndex = 14;
@@ -371,7 +371,7 @@
             "Electric",
             "Hybrid"});
             this.cbTransmission.Location = new System.Drawing.Point(8, 71);
-            this.cbTransmission.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbTransmission.Margin = new System.Windows.Forms.Padding(2);
             this.cbTransmission.Name = "cbTransmission";
             this.cbTransmission.Size = new System.Drawing.Size(181, 21);
             this.cbTransmission.TabIndex = 12;
@@ -390,7 +390,7 @@
             // numRate
             // 
             this.numRate.Location = new System.Drawing.Point(8, 31);
-            this.numRate.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.numRate.Margin = new System.Windows.Forms.Padding(2);
             this.numRate.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -416,7 +416,7 @@
             this.btnCancel.BackColor = System.Drawing.Color.IndianRed;
             this.btnCancel.ForeColor = System.Drawing.Color.White;
             this.btnCancel.Location = new System.Drawing.Point(91, 416);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(2);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(119, 55);
             this.btnCancel.TabIndex = 3;
@@ -429,7 +429,7 @@
             this.btnSave.BackColor = System.Drawing.Color.LimeGreen;
             this.btnSave.ForeColor = System.Drawing.Color.White;
             this.btnSave.Location = new System.Drawing.Point(226, 416);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnSave.Margin = new System.Windows.Forms.Padding(2);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(119, 55);
             this.btnSave.TabIndex = 4;
@@ -472,7 +472,7 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.lblTitle);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "AddVehicleForm";

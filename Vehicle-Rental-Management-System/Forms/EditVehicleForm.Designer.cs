@@ -57,12 +57,16 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.lblTitle = new System.Windows.Forms.Label();
+            this.picVehicle = new System.Windows.Forms.PictureBox();
+            this.btnSelectImage = new System.Windows.Forms.Button();
+            this.lblimageStatus = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numMileage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSeats)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numRate)).BeginInit();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numYear)).BeginInit();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picVehicle)).BeginInit();
             this.SuspendLayout();
             // 
             // btnSave
@@ -434,16 +438,49 @@
             this.lblTitle.TabIndex = 5;
             this.lblTitle.Text = "Edit Vehicle";
             // 
+            // picVehicle
+            // 
+            this.picVehicle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picVehicle.Location = new System.Drawing.Point(443, 73);
+            this.picVehicle.Name = "picVehicle";
+            this.picVehicle.Size = new System.Drawing.Size(213, 187);
+            this.picVehicle.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picVehicle.TabIndex = 10;
+            this.picVehicle.TabStop = false;
+            // 
+            // btnSelectImage
+            // 
+            this.btnSelectImage.BackColor = System.Drawing.SystemColors.Highlight;
+            this.btnSelectImage.ForeColor = System.Drawing.Color.White;
+            this.btnSelectImage.Location = new System.Drawing.Point(493, 266);
+            this.btnSelectImage.Name = "btnSelectImage";
+            this.btnSelectImage.Size = new System.Drawing.Size(112, 39);
+            this.btnSelectImage.TabIndex = 11;
+            this.btnSelectImage.Text = "Browse  Image...";
+            this.btnSelectImage.UseVisualStyleBackColor = false;
+            this.btnSelectImage.Click += new System.EventHandler(this.btnSelectImage_Click);
+            // 
+            // lblimageStatus
+            // 
+            this.lblimageStatus.AutoSize = true;
+            this.lblimageStatus.Location = new System.Drawing.Point(490, 315);
+            this.lblimageStatus.Name = "lblimageStatus";
+            this.lblimageStatus.Size = new System.Drawing.Size(0, 13);
+            this.lblimageStatus.TabIndex = 12;
+            // 
             // EditVehicleForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(446, 518);
+            this.ClientSize = new System.Drawing.Size(675, 518);
+            this.Controls.Add(this.btnSelectImage);
+            this.Controls.Add(this.picVehicle);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.lblTitle);
+            this.Controls.Add(this.lblimageStatus);
             this.Name = "EditVehicleForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "EditVehicleForm";
@@ -455,6 +492,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numYear)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picVehicle)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -491,5 +529,8 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblTitle;
+        private System.Windows.Forms.PictureBox picVehicle;
+        private System.Windows.Forms.Button btnSelectImage;
+        private System.Windows.Forms.Label lblimageStatus;
     }
 }

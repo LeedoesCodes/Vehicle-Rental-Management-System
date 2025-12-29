@@ -2,6 +2,8 @@
 using System;
 using System.Configuration;
 using System.Data;
+using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Vehicle_Rental_Management_System.Forms
@@ -9,8 +11,10 @@ namespace Vehicle_Rental_Management_System.Forms
     public partial class EditVehicleForm : Form
     {
         private int _vehicleId;
+        private string _selectedImagePath = "";
+        private string _originalImagePath = "";
+        private bool _imageChanged = false;
 
-        // Connection String
         private string connString = ConfigurationManager.ConnectionStrings["MySqlConnection"]?.ConnectionString
                                     ?? "Server=localhost;Database=vehicle_rental_db;Uid=root;Pwd=;";
 
@@ -21,9 +25,21 @@ namespace Vehicle_Rental_Management_System.Forms
             _vehicleId = vehicleId;
             this.Text = "Edit Vehicle";
 
+            // Setup PictureBox
+            SetupPictureBox();
+
             // Load data immediately when form opens
             LoadCategories();
             LoadVehicleDetails();
+        }
+
+        private void SetupPictureBox()
+        {
+            // Make PictureBox look nicer
+            picVehicle.BorderStyle = BorderStyle.FixedSingle;
+            picVehicle.SizeMode = PictureBoxSizeMode.Zoom;
+            picVehicle.Cursor = Cursors.Hand;
+            picVehicle.Click += PicVehicle_Click;
         }
 
         private void EditVehicleForm_Load(object sender, EventArgs e) { }
@@ -35,8 +51,7 @@ namespace Vehicle_Rental_Management_System.Forms
                 try
                 {
                     conn.Open();
-                    // Using direct SQL here to ensure we hit the correct table 'vehiclecategories'
-                    string query = "SELECT CategoryId, CategoryName FROM vehiclecategories";
+                    string query = "SELECT CategoryId, CategoryName FROM vehiclecategories ORDER BY CategoryName";
 
                     using (MySqlDataAdapter da = new MySqlDataAdapter(query, conn))
                     {
@@ -62,7 +77,6 @@ namespace Vehicle_Rental_Management_System.Forms
                 try
                 {
                     conn.Open();
-                    // Using Stored Procedure to get vehicle data
                     using (MySqlCommand cmd = new MySqlCommand("sp_GetVehicleById", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
@@ -98,6 +112,34 @@ namespace Vehicle_Rental_Management_System.Forms
 
                                 if (reader["CategoryId"] != DBNull.Value)
                                     cbCategory.SelectedValue = reader["CategoryId"];
+
+                                // Load image if exists
+                                if (reader["ImagePath"] != DBNull.Value)
+                                {
+                                    string path = reader["ImagePath"].ToString();
+                                    _originalImagePath = path;
+
+                                    if (File.Exists(path))
+                                    {
+                                        try
+                                        {
+                                            Image img = Image.FromFile(path);
+                                            picVehicle.Image = img;
+                                        }
+                                        catch
+                                        {
+                                            ShowDefaultImage();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        ShowDefaultImage();
+                                    }
+                                }
+                                else
+                                {
+                                    ShowDefaultImage();
+                                }
                             }
                             else
                             {
@@ -114,6 +156,31 @@ namespace Vehicle_Rental_Management_System.Forms
             }
         }
 
+        private void ShowDefaultImage()
+        {
+            try
+            {
+                Bitmap defaultImage = new Bitmap(picVehicle.Width, picVehicle.Height);
+                using (Graphics g = Graphics.FromImage(defaultImage))
+                {
+                    g.Clear(Color.WhiteSmoke);
+                    using (Font font = new Font("Arial", 12, FontStyle.Bold))
+                    using (StringFormat sf = new StringFormat())
+                    {
+                        sf.Alignment = StringAlignment.Center;
+                        sf.LineAlignment = StringAlignment.Center;
+                        g.DrawString("No Vehicle Image", font, Brushes.Gray,
+                                    new RectangleF(0, 0, defaultImage.Width, defaultImage.Height), sf);
+                    }
+                }
+                picVehicle.Image = defaultImage;
+            }
+            catch
+            {
+                picVehicle.Image = null;
+            }
+        }
+
         private void btnSave_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtMake.Text) || string.IsNullOrWhiteSpace(txtModel.Text))
@@ -122,32 +189,91 @@ namespace Vehicle_Rental_Management_System.Forms
                 return;
             }
 
+            // Handle image
+            string finalImagePath = _originalImagePath;
+
+            if (_imageChanged)
+            {
+                if (!string.IsNullOrEmpty(_selectedImagePath))
+                {
+                    try
+                    {
+                        // Create VehicleImages folder if it doesn't exist
+                        string folder = Path.Combine(Application.StartupPath, "VehicleImages");
+                        if (!Directory.Exists(folder))
+                            Directory.CreateDirectory(folder);
+
+                        // Generate unique filename
+                        string ext = Path.GetExtension(_selectedImagePath);
+                        string newFileName = $"vehicle_{_vehicleId}_{DateTime.Now:yyyyMMddHHmmss}{ext}";
+                        string destinationPath = Path.Combine(folder, newFileName);
+
+                        // Copy the image
+                        File.Copy(_selectedImagePath, destinationPath, true);
+                        finalImagePath = destinationPath;
+
+                        // Optionally delete old image if it exists and is different
+                        if (!string.IsNullOrEmpty(_originalImagePath) &&
+                            _originalImagePath != finalImagePath &&
+                            File.Exists(_originalImagePath))
+                        {
+                            try
+                            {
+                                File.Delete(_originalImagePath);
+                            }
+                            catch
+                            {
+                                // Ignore deletion errors
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error saving image: " + ex.Message);
+                        return;
+                    }
+                }
+                else if (string.IsNullOrEmpty(_selectedImagePath) && !string.IsNullOrEmpty(_originalImagePath))
+                {
+                    // User removed the image - delete the file
+                    try
+                    {
+                        if (File.Exists(_originalImagePath))
+                            File.Delete(_originalImagePath);
+                    }
+                    catch
+                    {
+                        // Ignore deletion errors
+                    }
+                    finalImagePath = null; // Set to null to delete from database
+                }
+            }
+
             using (MySqlConnection conn = new MySqlConnection(connString))
             {
                 try
                 {
                     conn.Open();
-                    // Using Stored Procedure to Update
-                    using (MySqlCommand cmd = new MySqlCommand("sp_UpdateVehicle", conn))
+                    // Use the NEW stored procedure with image parameter
+                    using (MySqlCommand cmd = new MySqlCommand("sp_UpdateVehicleWithImage", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
 
-                        // Parameters matching your NEW Stored Procedure (No Status)
+                        // Vehicle parameters including image
                         cmd.Parameters.AddWithValue("@p_VehicleId", _vehicleId);
                         cmd.Parameters.AddWithValue("@p_Make", txtMake.Text);
                         cmd.Parameters.AddWithValue("@p_Model", txtModel.Text);
-                        cmd.Parameters.AddWithValue("@p_Year", numYear.Value);
+                        cmd.Parameters.AddWithValue("@p_Year", (int)numYear.Value);
                         cmd.Parameters.AddWithValue("@p_Color", txtColor.Text);
                         cmd.Parameters.AddWithValue("@p_LicensePlate", txtPlate.Text);
                         cmd.Parameters.AddWithValue("@p_VIN", txtVIN.Text);
                         cmd.Parameters.AddWithValue("@p_CategoryId", cbCategory.SelectedValue);
-                        cmd.Parameters.AddWithValue("@p_DailyRate", numRate.Value);
                         cmd.Parameters.AddWithValue("@p_Transmission", cbTransmission.Text);
                         cmd.Parameters.AddWithValue("@p_FuelType", cbFuel.Text);
-                        cmd.Parameters.AddWithValue("@p_SeatingCapacity", numSeats.Value);
+                        cmd.Parameters.AddWithValue("@p_SeatingCapacity", (int)numSeats.Value);
                         cmd.Parameters.AddWithValue("@p_CurrentMileage", numMileage.Value);
-
-                        // NOTE: p_Status is NOT added here, preventing the error.
+                        cmd.Parameters.AddWithValue("@p_DailyRate", numRate.Value);
+                        cmd.Parameters.AddWithValue("@p_ImagePath", finalImagePath ?? (object)DBNull.Value);
 
                         cmd.ExecuteNonQuery();
 
@@ -167,6 +293,67 @@ namespace Vehicle_Rental_Management_System.Forms
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
+        }
+
+        private void btnSelectImage_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+                ofd.Title = "Select Vehicle Image";
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        _selectedImagePath = ofd.FileName;
+                        _imageChanged = true;
+
+                        // Load and display the image
+                        Image img = Image.FromFile(_selectedImagePath);
+                        picVehicle.Image = img;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error loading image: " + ex.Message);
+                        ShowDefaultImage();
+                    }
+                }
+            }
+        }
+
+        private void btnRemoveImage_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Remove current image?", "Confirm",
+                               MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                _selectedImagePath = "";
+                _imageChanged = true;
+                ShowDefaultImage();
+
+                // Mark for deletion from database
+                _originalImagePath = "";
+            }
+        }
+
+        private void PicVehicle_Click(object sender, EventArgs e)
+        {
+            // When user clicks on the picture box, open image selection
+            btnSelectImage.PerformClick();
+        }
+
+        private void EditVehicleForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // Clean up image resources
+            if (picVehicle.Image != null)
+            {
+                // Only dispose if it's the default image (created by us)
+                // or if we're closing without saving
+                if (this.DialogResult != DialogResult.OK)
+                {
+                    picVehicle.Image.Dispose();
+                }
+            }
         }
     }
 }

@@ -3,26 +3,43 @@ using System;
 using System.Configuration;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
-using Vehicle_Rental_Management_System.Forms; // Required to see AddVehicleForm
+using Vehicle_Rental_Management_System.Forms;
 
 namespace Vehicle_Rental_Management_System.Controls
 {
     public partial class VehiclesView : UserControl
     {
-        // Define the connection string centrally so it's easy to change
+        // Connection String
         private string connString = ConfigurationManager.ConnectionStrings["MySqlConnection"]?.ConnectionString
                                     ?? "Server=localhost;Database=vehicle_rental_db;Uid=root;Pwd=;";
+
+        // State variables
+        private string currentImagePath = "";
+        private int currentVehicleId = -1;
 
         public VehiclesView()
         {
             InitializeComponent();
 
-            // This forces the data to load immediately when the screen opens
+            // This is the ONLY layout code we keep, because making a label 
+            // transparent over an image is hard to do in the Designer.
+            SetupImageLabel();
+
             LoadVehicles();
         }
 
-        // --- DATA LOADING ---
+        private void SetupImageLabel()
+        {
+            // Make the label child of picture box so it sits on top transparently
+            lblVehicleDetails.Parent = picVehiclePreview;
+            lblVehicleDetails.BackColor = Color.FromArgb(180, 255, 255, 255); // Transparent White
+            lblVehicleDetails.Dock = DockStyle.Bottom; // Stick to bottom of image
+            lblVehicleDetails.TextAlign = ContentAlignment.MiddleCenter;
+            lblVehicleDetails.BringToFront();
+        }
+
         public void LoadVehicles()
         {
             using (MySqlConnection conn = new MySqlConnection(connString))
@@ -37,99 +54,165 @@ namespace Vehicle_Rental_Management_System.Controls
                         {
                             DataTable dt = new DataTable();
                             adapter.Fill(dt);
-
-                            if (dgvVehicles != null)
-                            {
-                                dgvVehicles.DataSource = dt;
-                                FormatGrid(); // Make it look nice
-                            }
+                            dgvVehicles.DataSource = dt;
+                            FormatGrid();
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error loading vehicles: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error loading vehicles: " + ex.Message, "Error");
                 }
             }
         }
 
         private void FormatGrid()
         {
-            // Only format if the columns actually exist
+            // 1. Hide unwanted columns
+            string[] hiddenColumns = {
+                "VehicleId", "VIN", "Transmission", "FuelType",
+                "Features", "CreatedDate", "ImagePath", "CategoryId", "BaseDailyRate"
+            };
+
+            foreach (string col in hiddenColumns)
+            {
+                if (dgvVehicles.Columns.Contains(col)) dgvVehicles.Columns[col].Visible = false;
+            }
+
+            // 2. Format Money and Numbers
             if (dgvVehicles.Columns.Contains("DailyRate"))
-            {
-                dgvVehicles.Columns["DailyRate"].DefaultCellStyle.Format = "C2"; // Currency format (e.g., $50.00 or ₱50.00)
-                dgvVehicles.Columns["DailyRate"].HeaderText = "Daily Rate";
-            }
-            if (dgvVehicles.Columns.Contains("VehicleId"))
-            {
-                dgvVehicles.Columns["VehicleId"].Visible = false; // Hide the internal ID
-            }
-            if (dgvVehicles.Columns.Contains("IsActive"))
-            {
-                dgvVehicles.Columns["IsActive"].Visible = false; // Hide status flag if it exists
-            }
+                dgvVehicles.Columns["DailyRate"].DefaultCellStyle.Format = "C2";
 
-            // Make columns fill the width of the screen
-            dgvVehicles.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            if (dgvVehicles.Columns.Contains("CurrentMileage"))
+                dgvVehicles.Columns["CurrentMileage"].DefaultCellStyle.Format = "N0";
 
-            // Selection mode: Select whole row, not just one cell
+            // 3. General Settings
+            dgvVehicles.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; // Auto-fit width
             dgvVehicles.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvVehicles.MultiSelect = false;
+
+            // Re-attach event if needed (Designer usually handles this, but good to be safe)
+            dgvVehicles.SelectionChanged -= DgvVehicles_SelectionChanged;
+            dgvVehicles.SelectionChanged += DgvVehicles_SelectionChanged;
         }
 
-        // --- ADD BUTTON ---
+        private void DgvVehicles_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvVehicles.SelectedRows.Count > 0)
+            {
+                ShowVehiclePreview(dgvVehicles.SelectedRows[0]);
+                ToggleButtons(true);
+            }
+            else
+            {
+                ClearPreview();
+                ToggleButtons(false);
+            }
+        }
+
+        private void ShowVehiclePreview(DataGridViewRow row)
+        {
+            try
+            {
+                // Extract Data
+                currentVehicleId = Convert.ToInt32(row.Cells["VehicleId"].Value);
+                string make = row.Cells["Make"].Value?.ToString();
+                string model = row.Cells["Model"].Value?.ToString();
+                string year = row.Cells["Year"].Value?.ToString();
+                string category = row.Cells["CategoryName"].Value?.ToString();
+
+                // Update UI
+                lblVehicleDetails.Text = $"{year} {make} {model}\n{category}";
+                picVehiclePreview.Visible = true;
+
+                // Handle Image
+                string path = row.Cells["ImagePath"]?.Value?.ToString();
+                if (!string.IsNullOrEmpty(path) && File.Exists(path))
+                {
+                    currentImagePath = path;
+                    // Dispose old image to free memory
+                    if (picVehiclePreview.Image != null) picVehiclePreview.Image.Dispose();
+                    picVehiclePreview.Image = Image.FromFile(path);
+                }
+                else
+                {
+                    ShowDefaultImage(category);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                ShowDefaultImage("Unknown");
+            }
+        }
+
+        private void ShowDefaultImage(string category)
+        {
+            // Create a simple blank image with text
+            Bitmap bmp = new Bitmap(Math.Max(1, picVehiclePreview.Width), Math.Max(1, picVehiclePreview.Height));
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                g.Clear(Color.WhiteSmoke);
+                using (Font f = new Font("Arial", 10, FontStyle.Bold))
+                using (StringFormat sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+                {
+                    g.DrawString(category ?? "Vehicle", f, Brushes.Gray,
+                        new RectangleF(0, 0, bmp.Width, bmp.Height), sf);
+                }
+            }
+
+            if (picVehiclePreview.Image != null) picVehiclePreview.Image.Dispose();
+            picVehiclePreview.Image = bmp;
+            currentImagePath = "";
+        }
+
+        private void ClearPreview()
+        {
+            if (picVehiclePreview.Image != null) picVehiclePreview.Image.Dispose();
+            picVehiclePreview.Image = null;
+            picVehiclePreview.Visible = false;
+            lblVehicleDetails.Text = "Select a vehicle";
+            currentImagePath = "";
+            currentVehicleId = -1;
+        }
+
+        private void ToggleButtons(bool enabled)
+        {
+            if (btnEdit != null) btnEdit.Enabled = enabled;
+            if (btnDelete != null) btnDelete.Enabled = enabled;
+        }
+
+        // ================= BUTTON EVENTS =================
+
         private void btnAdd_Click(object sender, EventArgs e)
         {
             try
             {
-                // Create the popup form
                 using (AddVehicleForm addForm = new AddVehicleForm())
                 {
-                    // Show it as a modal Dialog (blocks the background window)
-                    DialogResult result = addForm.ShowDialog();
-
-                    // If user clicked Save (OK), refresh the list
-                    if (result == DialogResult.OK)
+                    if (addForm.ShowDialog() == DialogResult.OK)
                     {
                         LoadVehicles();
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error opening Add Vehicle form:\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
-        // --- REFRESH BUTTON ---
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             LoadVehicles();
+            ClearPreview();
         }
 
-        // --- DELETE BUTTON ---
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            // Safety check: Is a row selected?
-            if (dgvVehicles.SelectedRows.Count == 0)
+            if (dgvVehicles.SelectedRows.Count == 0) return;
+
+            if (MessageBox.Show("Are you sure you want to delete this vehicle?", "Confirm",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
-                MessageBox.Show("Please select a vehicle to delete.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // Get ID and Name safely
-            int vehicleId = Convert.ToInt32(dgvVehicles.SelectedRows[0].Cells["VehicleId"].Value);
-            string make = dgvVehicles.SelectedRows[0].Cells["Make"].Value?.ToString() ?? "Unknown";
-            string model = dgvVehicles.SelectedRows[0].Cells["Model"].Value?.ToString() ?? "Vehicle";
-
-            // Confirm with user
-            DialogResult result = MessageBox.Show($"Are you sure you want to delete {make} {model}?",
-                                                  "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-            if (result == DialogResult.Yes)
-            {
-                DeleteVehicle(vehicleId);
+                DeleteVehicle(currentVehicleId);
             }
         }
 
@@ -140,55 +223,82 @@ namespace Vehicle_Rental_Management_System.Controls
                 try
                 {
                     conn.Open();
-                    // Basic soft delete (assuming you have an IsActive column) or hard delete
-                    // Ideally use a stored procedure like "sp_DeleteVehicle"
-                    string query = "UPDATE vehicles SET IsActive = 0 WHERE VehicleId = @id";
-
-                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    using (MySqlCommand cmd = new MySqlCommand("sp_RetireVehicle", conn))
                     {
-                        cmd.Parameters.AddWithValue("@id", vehicleId);
-                        int rows = cmd.ExecuteNonQuery();
-
-                        if (rows > 0)
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@p_VehicleId", vehicleId);
+                        if (cmd.ExecuteNonQuery() > 0)
                         {
-                            MessageBox.Show("Vehicle deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            LoadVehicles(); // Refresh grid
+                            MessageBox.Show("Vehicle deleted successfully.");
+                            LoadVehicles();
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception ex) { MessageBox.Show("Error: " + ex.Message); }
+            }
+        }
+
+        // ---------------------------------------------------------
+        // UPDATED EDIT BUTTON LOGIC
+        // ---------------------------------------------------------
+        private void btnEdit_Click(object sender, EventArgs e)
+        {
+            // 1. Check if a row is selected
+            if (dgvVehicles.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Please select a vehicle to edit.");
+                return;
+            }
+
+            try
+            {
+                // 2. Get the VehicleId from the selected row (It's a hidden column)
+                int vehicleId = Convert.ToInt32(dgvVehicles.SelectedRows[0].Cells["VehicleId"].Value);
+
+                // 3. Open the Edit Form passing the ID
+                using (EditVehicleForm editForm = new EditVehicleForm(vehicleId))
                 {
-                    MessageBox.Show("Error deleting: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // 4. If the user clicked "Save" (OK), refresh the grid
+                    if (editForm.ShowDialog() == DialogResult.OK)
+                    {
+                        LoadVehicles();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error opening edit form: " + ex.Message);
+            }
+        }
+
+        private void picVehiclePreview_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(currentImagePath) && File.Exists(currentImagePath))
+            {
+                // Simple full screen viewer
+                using (Form f = new Form())
+                {
+                    f.Text = lblVehicleDetails.Text.Replace("\n", " ");
+                    f.StartPosition = FormStartPosition.CenterParent;
+                    f.Size = new Size(800, 600);
+                    PictureBox pb = new PictureBox
+                    {
+                        Dock = DockStyle.Fill,
+                        Image = Image.FromFile(currentImagePath),
+                        SizeMode = PictureBoxSizeMode.Zoom
+                    };
+                    f.Controls.Add(pb);
+                    f.ShowDialog();
                 }
             }
         }
 
-        // --- EDIT BUTTON (Placeholder) ---
-        private void btnEdit_Click(object sender, EventArgs e)
+        // Cleanup resources
+        protected override void Dispose(bool disposing)
         {
-            if (dgvVehicles.SelectedRows.Count == 0) return;
-
-            // You can implement EditVehicleForm logic here later
-            MessageBox.Show("Edit functionality coming soon!", "Info");
-        }
-
-        // --- UI EVENTS ---
-
-        // Enable buttons only when a row is selected
-        private void dgvVehicles_SelectionChanged(object sender, EventArgs e)
-        {
-            bool hasSelection = dgvVehicles.SelectedRows.Count > 0;
-            if (btnEdit != null) btnEdit.Enabled = hasSelection;
-            if (btnDelete != null) btnDelete.Enabled = hasSelection;
-        }
-
-        // Double click to trigger Edit
-        private void dgvVehicles_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0)
-            {
-                if (btnEdit != null) btnEdit.PerformClick();
-            }
+            if (disposing && (components != null)) components.Dispose();
+            if (disposing && picVehiclePreview.Image != null) picVehiclePreview.Image.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

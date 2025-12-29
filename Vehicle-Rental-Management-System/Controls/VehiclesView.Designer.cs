@@ -11,14 +11,7 @@
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+       
 
         #region Component Designer generated code
 
@@ -33,41 +26,46 @@
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnEdit = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
+            this.picVehiclePreview = new System.Windows.Forms.PictureBox();
+            this.lblVehicleDetails = new System.Windows.Forms.Label();
             this.dgvVehicles = new System.Windows.Forms.DataGridView();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.pnlButtons.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picVehiclePreview)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVehicles)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(27, 25);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(22, 30);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(148, 46);
+            this.label1.Size = new System.Drawing.Size(120, 37);
             this.label1.TabIndex = 0;
             this.label1.Text = "Vehicles";
+            
             // 
             // pnlButtons
             // 
             this.pnlButtons.Controls.Add(this.btnDelete);
             this.pnlButtons.Controls.Add(this.btnEdit);
             this.pnlButtons.Controls.Add(this.btnAdd);
-            this.pnlButtons.Location = new System.Drawing.Point(27, 86);
-            this.pnlButtons.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pnlButtons.Location = new System.Drawing.Point(20, 70);
             this.pnlButtons.Name = "pnlButtons";
-            this.pnlButtons.Size = new System.Drawing.Size(613, 49);
+            this.pnlButtons.Size = new System.Drawing.Size(460, 40);
             this.pnlButtons.TabIndex = 1;
             // 
             // btnDelete
             // 
             this.btnDelete.BackColor = System.Drawing.Color.IndianRed;
             this.btnDelete.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnDelete.Location = new System.Drawing.Point(409, 0);
-            this.btnDelete.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnDelete.Location = new System.Drawing.Point(307, 0);
             this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(200, 49);
+            this.btnDelete.Size = new System.Drawing.Size(150, 40);
             this.btnDelete.TabIndex = 2;
             this.btnDelete.Text = "🗑 Delete Vehicle";
             this.btnDelete.UseVisualStyleBackColor = false;
@@ -77,10 +75,9 @@
             // 
             this.btnEdit.BackColor = System.Drawing.Color.YellowGreen;
             this.btnEdit.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnEdit.Location = new System.Drawing.Point(207, 0);
-            this.btnEdit.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnEdit.Location = new System.Drawing.Point(155, 0);
             this.btnEdit.Name = "btnEdit";
-            this.btnEdit.Size = new System.Drawing.Size(200, 49);
+            this.btnEdit.Size = new System.Drawing.Size(150, 40);
             this.btnEdit.TabIndex = 1;
             this.btnEdit.Text = "✏ Edit Vehicle";
             this.btnEdit.UseVisualStyleBackColor = false;
@@ -91,45 +88,83 @@
             this.btnAdd.BackColor = System.Drawing.SystemColors.HotTrack;
             this.btnAdd.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnAdd.Location = new System.Drawing.Point(0, 0);
-            this.btnAdd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(200, 49);
+            this.btnAdd.Size = new System.Drawing.Size(150, 40);
             this.btnAdd.TabIndex = 0;
             this.btnAdd.Text = "+ Add Vehicle";
             this.btnAdd.UseVisualStyleBackColor = false;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
+            // picVehiclePreview
+            // 
+            this.picVehiclePreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picVehiclePreview.Location = new System.Drawing.Point(51, 0);
+            this.picVehiclePreview.Name = "picVehiclePreview";
+            this.picVehiclePreview.Size = new System.Drawing.Size(234, 200);
+            this.picVehiclePreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picVehiclePreview.TabIndex = 3;
+            this.picVehiclePreview.TabStop = false;
+            this.picVehiclePreview.Visible = false;
+            // 
+            // lblVehicleDetails
+            // 
+            this.lblVehicleDetails.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblVehicleDetails.Location = new System.Drawing.Point(66, 76);
+            this.lblVehicleDetails.Name = "lblVehicleDetails";
+            this.lblVehicleDetails.Size = new System.Drawing.Size(202, 40);
+            this.lblVehicleDetails.TabIndex = 4;
+            this.lblVehicleDetails.Text = "[Select a vehicle to view image]";
+            this.lblVehicleDetails.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // dgvVehicles
             // 
             this.dgvVehicles.AllowUserToAddRows = false;
-            this.dgvVehicles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvVehicles.BackgroundColor = System.Drawing.Color.WhiteSmoke;
             this.dgvVehicles.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvVehicles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvVehicles.Location = new System.Drawing.Point(27, 160);
-            this.dgvVehicles.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgvVehicles.Location = new System.Drawing.Point(20, 130);
+            this.dgvVehicles.MultiSelect = false;
             this.dgvVehicles.Name = "dgvVehicles";
             this.dgvVehicles.ReadOnly = true;
             this.dgvVehicles.RowHeadersVisible = false;
             this.dgvVehicles.RowHeadersWidth = 51;
             this.dgvVehicles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvVehicles.Size = new System.Drawing.Size(1013, 542);
+            this.dgvVehicles.Size = new System.Drawing.Size(720, 421);
             this.dgvVehicles.TabIndex = 2;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Location = new System.Drawing.Point(20, 130);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+         
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.lblVehicleDetails);
+            this.splitContainer1.Panel2.Controls.Add(this.picVehiclePreview);
+            this.splitContainer1.Size = new System.Drawing.Size(1064, 421);
+            this.splitContainer1.SplitterDistance = 723;
+            this.splitContainer1.TabIndex = 5;
             // 
             // VehiclesView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.dgvVehicles);
             this.Controls.Add(this.pnlButtons);
+            this.Controls.Add(this.dgvVehicles);
             this.Controls.Add(this.label1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Controls.Add(this.splitContainer1);
             this.Name = "VehiclesView";
-            this.Size = new System.Drawing.Size(1067, 738);
+            this.Size = new System.Drawing.Size(1126, 610);
             this.pnlButtons.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picVehiclePreview)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVehicles)).EndInit();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -142,6 +177,9 @@
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Button btnEdit;
+        private System.Windows.Forms.PictureBox picVehiclePreview;
+        private System.Windows.Forms.Label lblVehicleDetails;
         private System.Windows.Forms.DataGridView dgvVehicles;
+        private System.Windows.Forms.SplitContainer splitContainer1;
     }
 }

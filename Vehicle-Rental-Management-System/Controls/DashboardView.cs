@@ -258,5 +258,10 @@ namespace Vehicle_Rental_Management_System.Controls
             StyleDataGridView();
             ApplyRoundedCornersToCards(); // Optional
         }
+
+        private void lblRevenueValue_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

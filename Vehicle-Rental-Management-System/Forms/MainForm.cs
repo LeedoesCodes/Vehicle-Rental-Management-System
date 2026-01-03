@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+// Ensure this matches your project structure
+using Vehicle_Rental_Management_System.Controls;
 
 namespace Vehicle_Rental_Management_System.Forms
 {
     public partial class MainForm : Form
     {
+        // Navigation State
         private Button activeButton = null;
         private Color normalColor = Color.FromArgb(33, 33, 33);
         private Color hoverColor = Color.FromArgb(50, 50, 50);
@@ -25,43 +22,47 @@ namespace Vehicle_Rental_Management_System.Forms
 
         private void SetupForm()
         {
-            // Update user info label
+            // 1. User Info
             if (lbluserInfo != null)
             {
                 lbluserInfo.Text = $"Welcome,\n{Program.CurrentUsername}\n({Program.CurrentUserRole})";
             }
-
-            // Set form title
             this.Text = $"Vehicle Rental System - {Program.CurrentUsername}";
 
-            // Hide admin button for non-admin users
+            // 2. Role Security
             if (Program.CurrentUserRole != "Admin" && btnAdmin != null)
             {
                 btnAdmin.Visible = false;
             }
 
-            // Setup button styling and events
+            // 3. Setup Buttons
             SetupButtonEvents();
 
-            // Activate dashboard by default
+            // 4. Default View
             ActivateButton(btnDashboard);
             ShowDashboard();
         }
 
         private void SetupButtonEvents()
         {
-            // Array of all navigation buttons
-            Button[] navButtons = { btnDashboard, btnVehicles, btnCustomers,
-                                   btnRentals, btnReports, btnAdmin };
+            // Note: Added btnReservation to this list
+            Button[] navButtons = {
+                btnDashboard,
+                btnVehicles,
+                btnCustomers,
+                btnRentals,
+                btnReservation,
+                btnReports,
+                btnAdmin
+            };
 
             foreach (Button button in navButtons)
             {
                 if (button != null)
                 {
-                    // Skip admin button if not visible
                     if (button == btnAdmin && !btnAdmin.Visible) continue;
 
-                    // Set initial styling
+                    // Base Style
                     button.FlatStyle = FlatStyle.Flat;
                     button.FlatAppearance.BorderSize = 0;
                     button.BackColor = normalColor;
@@ -70,19 +71,19 @@ namespace Vehicle_Rental_Management_System.Forms
                     button.TextAlign = ContentAlignment.MiddleLeft;
                     button.Padding = new Padding(15, 0, 0, 0);
 
-                    // Add events
+                    // Events
                     button.Click += NavButton_Click;
                     button.MouseEnter += Button_MouseEnter;
                     button.MouseLeave += Button_MouseLeave;
                 }
             }
 
-            // Style logout button
+            // Logout Button
             if (btnLogout != null)
             {
                 btnLogout.FlatStyle = FlatStyle.Flat;
                 btnLogout.FlatAppearance.BorderSize = 0;
-                btnLogout.BackColor = Color.FromArgb(220, 53, 69); // Red
+                btnLogout.BackColor = Color.FromArgb(220, 53, 69);
                 btnLogout.ForeColor = Color.White;
                 btnLogout.Font = new Font("Segoe UI", 10);
                 btnLogout.TextAlign = ContentAlignment.MiddleLeft;
@@ -93,50 +94,33 @@ namespace Vehicle_Rental_Management_System.Forms
             }
         }
 
-        private void Button_MouseEnter(object sender, EventArgs e)
-        {
-            Button button = sender as Button;
-            if (button != activeButton && button != btnLogout)
-            {
-                button.BackColor = hoverColor;
-            }
-        }
-
-        private void Button_MouseLeave(object sender, EventArgs e)
-        {
-            Button button = sender as Button;
-            if (button != activeButton && button != btnLogout)
-            {
-                button.BackColor = normalColor;
-            }
-        }
+        // =============================================================
+        // NAVIGATION LOGIC
+        // =============================================================
 
         private void NavButton_Click(object sender, EventArgs e)
         {
             Button clickedButton = sender as Button;
-
-            // Skip if already active
             if (clickedButton == activeButton) return;
 
-            // Deactivate previous button
             if (activeButton != null)
             {
                 activeButton.BackColor = normalColor;
                 activeButton.Font = new Font(activeButton.Font, FontStyle.Regular);
             }
 
-            // Activate clicked button
             ActivateButton(clickedButton);
-
-            // Handle navigation
             HandleNavigation(clickedButton);
         }
 
         private void ActivateButton(Button button)
         {
-            button.BackColor = activeColor;
-            button.Font = new Font(button.Font, FontStyle.Bold);
-            activeButton = button;
+            if (button != null)
+            {
+                button.BackColor = activeColor;
+                button.Font = new Font(button.Font, FontStyle.Bold);
+                activeButton = button;
+            }
         }
 
         private void HandleNavigation(Button button)
@@ -159,6 +143,10 @@ namespace Vehicle_Rental_Management_System.Forms
                     ShowRentalManagement();
                     break;
 
+                case "btnReservation":
+                    ShowReservations();
+                    break;
+
                 case "btnReports":
                     ShowReports();
                     break;
@@ -169,66 +157,49 @@ namespace Vehicle_Rental_Management_System.Forms
             }
         }
 
+        // =============================================================
+        // PAGE LOADERS
+        // =============================================================
+
         private void ShowDashboard()
         {
-            // 1. Clear current content
             contentPanel.Controls.Clear();
-
-            // 2. Load the Dashboard UserControl
-            // Ensure you have: using Vehicle_Rental_Management_System.Controls;
-            var dashboardView = new Controls.DashboardView();
-            dashboardView.Dock = DockStyle.Fill;
-
-            // 3. Add to panel
-            contentPanel.Controls.Add(dashboardView);
-        }
-
-        private void AddQuickStats()
-        {
-            Panel statsPanel = new Panel();
-            statsPanel.Location = new Point(50, 150);
-            statsPanel.Size = new Size(300, 200);
-            statsPanel.BackColor = Color.FromArgb(240, 240, 240);
-            statsPanel.BorderStyle = BorderStyle.FixedSingle;
-
-            Label statsTitle = new Label();
-            statsTitle.Text = "System Overview";
-            statsTitle.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-            statsTitle.AutoSize = true;
-            statsTitle.Location = new Point(20, 20);
-
-            Label statsContent = new Label();
-            statsContent.Text = "• Total Vehicles: 25\n" +
-                               "• Available: 15\n" +
-                               "• Rented: 10\n" +
-                               "• Active Customers: 50\n" +
-                               "• Pending Rentals: 5\n" +
-                               "• Revenue Today: ₱5,250";
-            statsContent.Font = new Font("Segoe UI", 10);
-            statsContent.AutoSize = true;
-            statsContent.Location = new Point(20, 50);
-
-            statsPanel.Controls.Add(statsTitle);
-            statsPanel.Controls.Add(statsContent);
-            contentPanel.Controls.Add(statsPanel);
+            var view = new DashboardView();
+            view.Dock = DockStyle.Fill;
+            contentPanel.Controls.Add(view);
         }
 
         private void ShowVehicleManagement()
         {
-            // Clear the content panel
+            contentPanel.Controls.Clear();
+            var view = new VehiclesView();
+            view.Dock = DockStyle.Fill;
+            contentPanel.Controls.Add(view);
+        }
+
+        private void ShowRentalManagement()
+        {
+            contentPanel.Controls.Clear();
+            var view = new RentalsView();
+            view.Dock = DockStyle.Fill;
+            contentPanel.Controls.Add(view);
+        }
+
+        private void ShowReservations()
+        {
             contentPanel.Controls.Clear();
 
-            // Create an instance of VehiclesView
-            var vehiclesView = new Controls.VehiclesView();
-            vehiclesView.Dock = DockStyle.Fill;
-            contentPanel.Controls.Add(vehiclesView);
+            // --- UPDATED: Now loads the actual Reservations View ---
+            // Ensure you have created the ReservationsView.cs file
+            var view = new ReservationsView();
+            view.Dock = DockStyle.Fill;
+            contentPanel.Controls.Add(view);
         }
 
         private void ShowCustomerManagement()
         {
             contentPanel.Controls.Clear();
 
-            // 1. Title
             Label lblTitle = new Label();
             lblTitle.Text = "Customer Management";
             lblTitle.Font = new Font("Segoe UI", 16, FontStyle.Bold);
@@ -237,349 +208,121 @@ namespace Vehicle_Rental_Management_System.Forms
             lblTitle.Location = new Point(50, 30);
             contentPanel.Controls.Add(lblTitle);
 
-            // 2. Buttons
-            Button btnAddCustomer = new Button();
-            btnAddCustomer.Text = "➕ Add New Customer";
-            btnAddCustomer.Size = new Size(180, 45);
-            btnAddCustomer.Location = new Point(50, 90);
-            btnAddCustomer.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            btnAddCustomer.BackColor = Color.FromArgb(40, 167, 69);
-            btnAddCustomer.ForeColor = Color.White;
-            btnAddCustomer.FlatStyle = FlatStyle.Flat;
-            btnAddCustomer.FlatAppearance.BorderSize = 0;
-            btnAddCustomer.Click += (s, e) => OpenAddCustomerForm();
-            contentPanel.Controls.Add(btnAddCustomer);
+            Button btnAdd = CreateActionButton("➕ Add New Customer", 50, 90, Color.FromArgb(40, 167, 69));
+            btnAdd.Click += (s, e) => OpenAddCustomerForm();
+            contentPanel.Controls.Add(btnAdd);
 
-            Button btnViewCustomers = new Button();
-            btnViewCustomers.Text = "👥 View All Customers";
-            btnViewCustomers.Size = new Size(180, 45);
-            btnViewCustomers.Location = new Point(250, 90);
-            btnViewCustomers.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            btnViewCustomers.BackColor = Color.FromArgb(0, 123, 255);
-            btnViewCustomers.ForeColor = Color.White;
-            btnViewCustomers.FlatStyle = FlatStyle.Flat;
-            btnViewCustomers.FlatAppearance.BorderSize = 0;
-            btnViewCustomers.Click += (s, e) => OpenCustomerListForm();
-            contentPanel.Controls.Add(btnViewCustomers);
+            Button btnView = CreateActionButton("👥 View All Customers", 250, 90, Color.FromArgb(0, 123, 255));
+            btnView.Click += (s, e) => OpenCustomerListForm();
+            contentPanel.Controls.Add(btnView);
 
-            Button btnSearchCustomers = new Button();
-            btnSearchCustomers.Text = "🔍 Search Customers";
-            btnSearchCustomers.Size = new Size(180, 45);
-            btnSearchCustomers.Location = new Point(450, 90);
-            btnSearchCustomers.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            btnSearchCustomers.BackColor = Color.FromArgb(108, 117, 125);
-            btnSearchCustomers.ForeColor = Color.White;
-            btnSearchCustomers.FlatStyle = FlatStyle.Flat;
-            btnSearchCustomers.FlatAppearance.BorderSize = 0;
-            btnSearchCustomers.Click += (s, e) => SearchCustomers();
-            contentPanel.Controls.Add(btnSearchCustomers);
-
-            // 3. Recent Customers Panel (NOW DYNAMIC)
-            Panel recentPanel = new Panel();
-            recentPanel.Location = new Point(50, 160);
-            recentPanel.Size = new Size(700, 300);
-            recentPanel.BackColor = Color.White;
-            recentPanel.BorderStyle = BorderStyle.FixedSingle;
-
-            Label recentTitle = new Label();
-            recentTitle.Text = "Recently Added Customers";
-            recentTitle.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-            recentTitle.Location = new Point(10, 10);
-            recentTitle.AutoSize = true;
-            recentPanel.Controls.Add(recentTitle);
-
-            // Call the helper method to load real data
-            LoadRecentCustomers(recentPanel);
-
-            contentPanel.Controls.Add(recentPanel);
-        }
-
-        // NEW HELPER METHOD TO FETCH DATA
-        private void LoadRecentCustomers(Panel container)
-        {
-            // Connection logic (matches your standard connection)
-            string connString = "Server=localhost;Database=vehicle_rental_db;Uid=root;Pwd=;";
-            if (System.Configuration.ConfigurationManager.ConnectionStrings["MySqlConnection"] != null)
-                connString = System.Configuration.ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
-
-            using (MySql.Data.MySqlClient.MySqlConnection conn = new MySql.Data.MySqlClient.MySqlConnection(connString))
-            {
-                try
-                {
-                    conn.Open();
-                    using (MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand("sp_GetRecentCustomers", conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-
-                        using (MySql.Data.MySqlClient.MySqlDataAdapter adapter = new MySql.Data.MySqlClient.MySqlDataAdapter(cmd))
-                        {
-                            DataTable dt = new DataTable();
-                            adapter.Fill(dt);
-
-                            if (dt.Rows.Count > 0)
-                            {
-                                // Show Data in a Grid
-                                DataGridView dgv = new DataGridView();
-                                dgv.DataSource = dt;
-                                dgv.Location = new Point(10, 40);
-                                dgv.Size = new Size(680, 250);
-                                dgv.ReadOnly = true;
-                                dgv.AllowUserToAddRows = false;
-                                dgv.RowHeadersVisible = false;
-                                dgv.BorderStyle = BorderStyle.None;
-                                dgv.BackgroundColor = Color.White;
-                                dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                                container.Controls.Add(dgv);
-                            }
-                            else
-                            {
-                                // Only show this IF database is actually empty
-                                Label lblEmpty = new Label();
-                                lblEmpty.Text = "No customers found in database.";
-                                lblEmpty.ForeColor = Color.Gray;
-                                lblEmpty.Location = new Point(10, 40);
-                                lblEmpty.AutoSize = true;
-                                container.Controls.Add(lblEmpty);
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Label lblError = new Label();
-                    lblError.Text = "Error loading data: " + ex.Message;
-                    lblError.ForeColor = Color.Red;
-                    lblError.Location = new Point(10, 40);
-                    lblError.AutoSize = true;
-                    container.Controls.Add(lblError);
-                }
-            }
-        }
-
-        // In MainForm.cs
-
-        private void ShowRentalManagement()
-        {
-            // 1. Clear the content panel
-            contentPanel.Controls.Clear();
-
-            // 2. Create the View
-            // Ensure you have: using Vehicle_Rental_Management_System.Controls;
-            var rentalsView = new Controls.RentalsView();
-
-            // 3. Dock it to fill the space
-            rentalsView.Dock = DockStyle.Fill;
-
-            // 4. Add to panel
-            contentPanel.Controls.Add(rentalsView);
+            Button btnSearch = CreateActionButton("🔍 Search Customers", 450, 90, Color.FromArgb(108, 117, 125));
+            btnSearch.Click += (s, e) => SearchCustomers();
+            contentPanel.Controls.Add(btnSearch);
         }
 
         private void ShowReports()
         {
             contentPanel.Controls.Clear();
-
-            Label lblTitle = new Label();
-            lblTitle.Text = "Reports";
-            lblTitle.Font = new Font("Segoe UI", 16, FontStyle.Bold);
-            lblTitle.AutoSize = true;
-            lblTitle.Location = new Point(50, 30);
-
-            contentPanel.Controls.Add(lblTitle);
+            Label lbl = new Label { Text = "Reports Panel", Font = new Font("Segoe UI", 16, FontStyle.Bold), Location = new Point(50, 30), AutoSize = true };
+            contentPanel.Controls.Add(lbl);
         }
 
         private void ShowAdminPanel()
         {
             contentPanel.Controls.Clear();
-
-            Label lblTitle = new Label();
-            lblTitle.Text = "Admin Panel";
-            lblTitle.Font = new Font("Segoe UI", 16, FontStyle.Bold);
-            lblTitle.AutoSize = true;
-            lblTitle.Location = new Point(50, 30);
-
-            contentPanel.Controls.Add(lblTitle);
+            Label lbl = new Label { Text = "Admin Panel", Font = new Font("Segoe UI", 16, FontStyle.Bold), Location = new Point(50, 30), AutoSize = true };
+            contentPanel.Controls.Add(lbl);
         }
 
-        // ============ CUSTOMER MANAGEMENT METHODS ============
+        // =============================================================
+        // HELPER METHODS
+        // =============================================================
 
-        private void OpenAddCustomerForm()
+        private Button CreateActionButton(string text, int x, int y, Color color)
         {
-            try
+            return new Button
             {
-                CustomerAddForm customerForm = new CustomerAddForm();
-                customerForm.StartPosition = FormStartPosition.CenterParent;
+                Text = text,
+                Location = new Point(x, y),
+                Size = new Size(180, 45),
+                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                BackColor = color,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                FlatAppearance = { BorderSize = 0 }
+            };
+        }
 
-                DialogResult result = customerForm.ShowDialog(this);
-
-                if (result == DialogResult.OK)
-                {
-                    MessageBox.Show("Customer added successfully!", "Success",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // Refresh customer data if needed
-                    // RefreshCustomerData();
-                }
-            }
-            catch (Exception ex)
+        private void Button_MouseEnter(object sender, EventArgs e)
+        {
+            Button button = sender as Button;
+            if (button != activeButton && button != btnLogout)
             {
-                MessageBox.Show($"Error opening customer form: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                button.BackColor = hoverColor;
             }
         }
 
-        private void OpenCustomerListForm()
+        private void Button_MouseLeave(object sender, EventArgs e)
         {
-            try
+            Button button = sender as Button;
+            if (button != activeButton && button != btnLogout)
             {
-                CustomerListForm listForm = new CustomerListForm();
-                listForm.StartPosition = FormStartPosition.CenterParent;
-                listForm.Show();
-                listForm.BringToFront();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error opening customer list: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                button.BackColor = normalColor;
             }
         }
-
-        private void SearchCustomers()
-        {
-            // Create a simple search dialog
-            using (Form searchForm = new Form())
-            {
-                searchForm.Text = "Search Customers";
-                searchForm.Size = new Size(400, 200);
-                searchForm.StartPosition = FormStartPosition.CenterParent;
-                searchForm.FormBorderStyle = FormBorderStyle.FixedDialog;
-
-                Label lblSearch = new Label();
-                lblSearch.Text = "Enter search term:";
-                lblSearch.Location = new Point(20, 30);
-                lblSearch.Size = new Size(150, 25);
-
-                TextBox txtSearch = new TextBox();
-                txtSearch.Location = new Point(180, 30);
-                txtSearch.Size = new Size(180, 25);
-                txtSearch.Focus();
-
-                Button btnSearch = new Button();
-                btnSearch.Text = "Search";
-                btnSearch.Location = new Point(120, 80);
-                btnSearch.Size = new Size(100, 30);
-                btnSearch.DialogResult = DialogResult.OK;
-
-                Button btnCancel = new Button();
-                btnCancel.Text = "Cancel";
-                btnCancel.Location = new Point(230, 80);
-                btnCancel.Size = new Size(100, 30);
-                btnCancel.DialogResult = DialogResult.Cancel;
-
-                searchForm.Controls.AddRange(new Control[] { lblSearch, txtSearch, btnSearch, btnCancel });
-
-                if (searchForm.ShowDialog(this) == DialogResult.OK && !string.IsNullOrWhiteSpace(txtSearch.Text))
-                {
-                    // Open customer list with search filter
-                    OpenCustomerListFormWithSearch(txtSearch.Text);
-                }
-            }
-        }
-
-        private void OpenCustomerListFormWithSearch(string searchTerm)
-        {
-            try
-            {
-                CustomerListForm listForm = new CustomerListForm();
-                listForm.StartPosition = FormStartPosition.CenterParent;
-                listForm.Show();
-                listForm.BringToFront();
-
-                // Note: You'll need to modify CustomerListForm to accept search terms
-                // For now, show a message
-                MessageBox.Show($"Searching for customers with: {searchTerm}", "Search",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        // ============ VEHICLE MANAGEMENT METHODS ============
-
-        private void OpenVehicleManagement()
-        {
-            VehicleManagementForm vehicleForm = new VehicleManagementForm();
-            vehicleForm.ShowDialog();
-        }
-
-        private void OpenAddVehicleForm()
-        {
-            MessageBox.Show("Open Add Vehicle Form");
-        }
-
-        private void OpenVehicleSearch()
-        {
-            MessageBox.Show("Open Vehicle Search");
-        }
-
-        // ============ UTILITY METHODS ============
 
         private void Logout()
         {
-            if (MessageBox.Show("Are you sure you want to logout?", "Confirm Logout",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Are you sure you want to logout?", "Confirm Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 this.Close();
             }
         }
 
-        // ============ EVENT HANDLERS ============
-
-        private void navButtonsPanel_Paint(object sender, PaintEventArgs e)
+        private void OpenAddCustomerForm()
         {
-            // Optional: Add custom painting if needed
+            try { new CustomerAddForm { StartPosition = FormStartPosition.CenterParent }.ShowDialog(this); }
+            catch (Exception ex) { MessageBox.Show("Error: " + ex.Message); }
         }
 
-        private void btnDashboard_Click(object sender, EventArgs e)
+        private void OpenCustomerListForm()
         {
-            // Handled by NavButton_Click
+            try { new CustomerListForm { StartPosition = FormStartPosition.CenterParent }.Show(); }
+            catch (Exception ex) { MessageBox.Show("Error: " + ex.Message); }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void SearchCustomers()
         {
-            // Rename this button to something meaningful
+            using (Form f = new Form { Text = "Search", Size = new Size(300, 150), StartPosition = FormStartPosition.CenterParent })
+            {
+                TextBox txt = new TextBox { Left = 50, Top = 20, Width = 200 };
+                Button btn = new Button { Text = "Search", Left = 50, Top = 60, DialogResult = DialogResult.OK };
+                f.Controls.Add(txt); f.Controls.Add(btn);
+                if (f.ShowDialog() == DialogResult.OK)
+                {
+                    MessageBox.Show("Searching for: " + txt.Text);
+                }
+            }
         }
 
-        private void lbluserInfo_Click(object sender, EventArgs e)
-        {
-            // Optional: Add click behavior for user info
-        }
+        // =============================================================
+        // EMPTY EVENT HANDLERS (Preserved for Designer Safety)
+        // =============================================================
+        private void navButtonsPanel_Paint(object sender, PaintEventArgs e) { }
+        private void btnDashboard_Click(object sender, EventArgs e) { }
+        private void button1_Click(object sender, EventArgs e) { }
+        private void lbluserInfo_Click(object sender, EventArgs e) { }
+        private void btnVehicles_Click(object sender, EventArgs e) { }
+        private void btnCustomers_Click(object sender, EventArgs e) { }
+        private void btnRentals_Click(object sender, EventArgs e) { }
+        private void btnReports_Click(object sender, EventArgs e) { }
+        private void btnAdmin_Click(object sender, EventArgs e) { }
+        private void contentPanel_Paint(object sender, PaintEventArgs e) { }
 
-        private void btnVehicles_Click(object sender, EventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
         {
-            // Handled by NavButton_Click
-        }
 
-        private void btnCustomers_Click(object sender, EventArgs e)
-        {
-            // Handled by NavButton_Click
-        }
-
-        private void btnRentals_Click(object sender, EventArgs e)
-        {
-            // Handled by NavButton_Click
-        }
-
-        private void btnReports_Click(object sender, EventArgs e)
-        {
-            // Handled by NavButton_Click
-        }
-
-        private void btnAdmin_Click(object sender, EventArgs e)
-        {
-            // Handled by NavButton_Click
         }
     }
 }

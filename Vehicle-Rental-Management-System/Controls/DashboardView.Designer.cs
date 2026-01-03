@@ -80,11 +80,10 @@
             this.pnlCards.Controls.Add(this.pnlCardRented);
             this.pnlCards.Controls.Add(this.pnlCardRevenue);
             this.pnlCards.Controls.Add(this.pnlCardOverdue);
-            this.pnlCards.Location = new System.Drawing.Point(13, 12);
-            this.pnlCards.Margin = new System.Windows.Forms.Padding(4);
+            this.pnlCards.Location = new System.Drawing.Point(10, 10);
             this.pnlCards.Name = "pnlCards";
-            this.pnlCards.Padding = new System.Windows.Forms.Padding(13, 12, 13, 12);
-            this.pnlCards.Size = new System.Drawing.Size(1040, 172);
+            this.pnlCards.Padding = new System.Windows.Forms.Padding(10);
+            this.pnlCards.Size = new System.Drawing.Size(780, 140);
             this.pnlCards.TabIndex = 0;
             // 
             // pnlCardTotal
@@ -93,21 +92,20 @@
             this.pnlCardTotal.Controls.Add(this.label1);
             this.pnlCardTotal.Controls.Add(this.lblTotalValue);
             this.pnlCardTotal.ForeColor = System.Drawing.Color.White;
-            this.pnlCardTotal.Location = new System.Drawing.Point(26, 24);
-            this.pnlCardTotal.Margin = new System.Windows.Forms.Padding(13, 12, 13, 12);
+            this.pnlCardTotal.Location = new System.Drawing.Point(20, 20);
+            this.pnlCardTotal.Margin = new System.Windows.Forms.Padding(10);
             this.pnlCardTotal.Name = "pnlCardTotal";
-            this.pnlCardTotal.Padding = new System.Windows.Forms.Padding(13, 12, 13, 12);
-            this.pnlCardTotal.Size = new System.Drawing.Size(160, 123);
+            this.pnlCardTotal.Padding = new System.Windows.Forms.Padding(10);
+            this.pnlCardTotal.Size = new System.Drawing.Size(120, 100);
             this.pnlCardTotal.TabIndex = 0;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(33, 10);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(25, 8);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(93, 23);
+            this.label1.Size = new System.Drawing.Size(73, 17);
             this.label1.TabIndex = 1;
             this.label1.Text = "Total Fleet";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -116,10 +114,9 @@
             // 
             this.lblTotalValue.AutoSize = true;
             this.lblTotalValue.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTotalValue.Location = new System.Drawing.Point(52, 31);
-            this.lblTotalValue.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblTotalValue.Location = new System.Drawing.Point(39, 25);
             this.lblTotalValue.Name = "lblTotalValue";
-            this.lblTotalValue.Size = new System.Drawing.Size(46, 54);
+            this.lblTotalValue.Size = new System.Drawing.Size(38, 45);
             this.lblTotalValue.TabIndex = 0;
             this.lblTotalValue.Text = "0";
             this.lblTotalValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -130,21 +127,20 @@
             this.pnlCardAvailable.Controls.Add(this.labeltitle);
             this.pnlCardAvailable.Controls.Add(this.lblAvailableValue);
             this.pnlCardAvailable.ForeColor = System.Drawing.Color.White;
-            this.pnlCardAvailable.Location = new System.Drawing.Point(212, 24);
-            this.pnlCardAvailable.Margin = new System.Windows.Forms.Padding(13, 12, 13, 12);
+            this.pnlCardAvailable.Location = new System.Drawing.Point(160, 20);
+            this.pnlCardAvailable.Margin = new System.Windows.Forms.Padding(10);
             this.pnlCardAvailable.Name = "pnlCardAvailable";
-            this.pnlCardAvailable.Padding = new System.Windows.Forms.Padding(13, 12, 13, 12);
-            this.pnlCardAvailable.Size = new System.Drawing.Size(160, 123);
+            this.pnlCardAvailable.Padding = new System.Windows.Forms.Padding(10);
+            this.pnlCardAvailable.Size = new System.Drawing.Size(120, 100);
             this.pnlCardAvailable.TabIndex = 1;
             // 
             // labeltitle
             // 
             this.labeltitle.AutoSize = true;
             this.labeltitle.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labeltitle.Location = new System.Drawing.Point(8, 10);
-            this.labeltitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labeltitle.Location = new System.Drawing.Point(6, 8);
             this.labeltitle.Name = "labeltitle";
-            this.labeltitle.Size = new System.Drawing.Size(145, 23);
+            this.labeltitle.Size = new System.Drawing.Size(113, 17);
             this.labeltitle.TabIndex = 1;
             this.labeltitle.Text = "Vehicle Available";
             this.labeltitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -153,10 +149,9 @@
             // 
             this.lblAvailableValue.AutoSize = true;
             this.lblAvailableValue.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAvailableValue.Location = new System.Drawing.Point(53, 31);
-            this.lblAvailableValue.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblAvailableValue.Location = new System.Drawing.Point(44, 25);
             this.lblAvailableValue.Name = "lblAvailableValue";
-            this.lblAvailableValue.Size = new System.Drawing.Size(46, 54);
+            this.lblAvailableValue.Size = new System.Drawing.Size(38, 45);
             this.lblAvailableValue.TabIndex = 0;
             this.lblAvailableValue.Text = "0";
             this.lblAvailableValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -167,21 +162,20 @@
             this.pnlCardRented.Controls.Add(this.label2);
             this.pnlCardRented.Controls.Add(this.lblRentedValue);
             this.pnlCardRented.ForeColor = System.Drawing.Color.White;
-            this.pnlCardRented.Location = new System.Drawing.Point(398, 24);
-            this.pnlCardRented.Margin = new System.Windows.Forms.Padding(13, 12, 13, 12);
+            this.pnlCardRented.Location = new System.Drawing.Point(300, 20);
+            this.pnlCardRented.Margin = new System.Windows.Forms.Padding(10);
             this.pnlCardRented.Name = "pnlCardRented";
-            this.pnlCardRented.Padding = new System.Windows.Forms.Padding(13, 12, 13, 12);
-            this.pnlCardRented.Size = new System.Drawing.Size(160, 123);
+            this.pnlCardRented.Padding = new System.Windows.Forms.Padding(10);
+            this.pnlCardRented.Size = new System.Drawing.Size(120, 100);
             this.pnlCardRented.TabIndex = 2;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(48, 10);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(36, 8);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(67, 23);
+            this.label2.Size = new System.Drawing.Size(51, 17);
             this.label2.TabIndex = 1;
             this.label2.Text = "Rented";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -190,10 +184,9 @@
             // 
             this.lblRentedValue.AutoSize = true;
             this.lblRentedValue.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRentedValue.Location = new System.Drawing.Point(52, 31);
-            this.lblRentedValue.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblRentedValue.Location = new System.Drawing.Point(42, 25);
             this.lblRentedValue.Name = "lblRentedValue";
-            this.lblRentedValue.Size = new System.Drawing.Size(46, 54);
+            this.lblRentedValue.Size = new System.Drawing.Size(38, 45);
             this.lblRentedValue.TabIndex = 0;
             this.lblRentedValue.Text = "0";
             this.lblRentedValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -204,21 +197,20 @@
             this.pnlCardRevenue.Controls.Add(this.label5);
             this.pnlCardRevenue.Controls.Add(this.lblRevenueValue);
             this.pnlCardRevenue.ForeColor = System.Drawing.Color.White;
-            this.pnlCardRevenue.Location = new System.Drawing.Point(584, 24);
-            this.pnlCardRevenue.Margin = new System.Windows.Forms.Padding(13, 12, 13, 12);
+            this.pnlCardRevenue.Location = new System.Drawing.Point(440, 20);
+            this.pnlCardRevenue.Margin = new System.Windows.Forms.Padding(10);
             this.pnlCardRevenue.Name = "pnlCardRevenue";
-            this.pnlCardRevenue.Padding = new System.Windows.Forms.Padding(13, 12, 13, 12);
-            this.pnlCardRevenue.Size = new System.Drawing.Size(169, 123);
+            this.pnlCardRevenue.Padding = new System.Windows.Forms.Padding(10);
+            this.pnlCardRevenue.Size = new System.Drawing.Size(127, 100);
             this.pnlCardRevenue.TabIndex = 3;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(16, 10);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Location = new System.Drawing.Point(12, 8);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(147, 23);
+            this.label5.Size = new System.Drawing.Size(115, 17);
             this.label5.TabIndex = 1;
             this.label5.Text = "Revenue (Month)";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -227,13 +219,13 @@
             // 
             this.lblRevenueValue.AutoSize = true;
             this.lblRevenueValue.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRevenueValue.Location = new System.Drawing.Point(61, 48);
-            this.lblRevenueValue.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblRevenueValue.Location = new System.Drawing.Point(46, 39);
             this.lblRevenueValue.Name = "lblRevenueValue";
-            this.lblRevenueValue.Size = new System.Drawing.Size(43, 32);
+            this.lblRevenueValue.Size = new System.Drawing.Size(35, 25);
             this.lblRevenueValue.TabIndex = 0;
             this.lblRevenueValue.Text = "₱0";
             this.lblRevenueValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblRevenueValue.Click += new System.EventHandler(this.lblRevenueValue_Click);
             // 
             // pnlCardOverdue
             // 
@@ -241,21 +233,20 @@
             this.pnlCardOverdue.Controls.Add(this.label7);
             this.pnlCardOverdue.Controls.Add(this.lblOverdueValue);
             this.pnlCardOverdue.ForeColor = System.Drawing.Color.White;
-            this.pnlCardOverdue.Location = new System.Drawing.Point(779, 24);
-            this.pnlCardOverdue.Margin = new System.Windows.Forms.Padding(13, 12, 13, 12);
+            this.pnlCardOverdue.Location = new System.Drawing.Point(587, 20);
+            this.pnlCardOverdue.Margin = new System.Windows.Forms.Padding(10);
             this.pnlCardOverdue.Name = "pnlCardOverdue";
-            this.pnlCardOverdue.Padding = new System.Windows.Forms.Padding(13, 12, 13, 12);
-            this.pnlCardOverdue.Size = new System.Drawing.Size(160, 123);
+            this.pnlCardOverdue.Padding = new System.Windows.Forms.Padding(10);
+            this.pnlCardOverdue.Size = new System.Drawing.Size(120, 100);
             this.pnlCardOverdue.TabIndex = 4;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(39, 10);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Location = new System.Drawing.Point(29, 8);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(78, 23);
+            this.label7.Size = new System.Drawing.Size(60, 17);
             this.label7.TabIndex = 1;
             this.label7.Text = "Overdue";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -264,10 +255,9 @@
             // 
             this.lblOverdueValue.AutoSize = true;
             this.lblOverdueValue.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblOverdueValue.Location = new System.Drawing.Point(31, 31);
-            this.lblOverdueValue.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblOverdueValue.Location = new System.Drawing.Point(31, 25);
             this.lblOverdueValue.Name = "lblOverdueValue";
-            this.lblOverdueValue.Size = new System.Drawing.Size(72, 54);
+            this.lblOverdueValue.Size = new System.Drawing.Size(58, 45);
             this.lblOverdueValue.TabIndex = 0;
             this.lblOverdueValue.Text = "₱0";
             this.lblOverdueValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -283,14 +273,13 @@
             this.bottomSplit.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.bottomSplit.Controls.Add(this.chartContainer, 0, 0);
             this.bottomSplit.Controls.Add(this.gridContainer, 1, 0);
-            this.bottomSplit.Location = new System.Drawing.Point(13, 197);
-            this.bottomSplit.Margin = new System.Windows.Forms.Padding(4);
+            this.bottomSplit.Location = new System.Drawing.Point(10, 160);
             this.bottomSplit.Name = "bottomSplit";
-            this.bottomSplit.Padding = new System.Windows.Forms.Padding(13, 12, 13, 12);
+            this.bottomSplit.Padding = new System.Windows.Forms.Padding(10);
             this.bottomSplit.RowCount = 1;
             this.bottomSplit.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.bottomSplit.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.bottomSplit.Size = new System.Drawing.Size(1040, 517);
+            this.bottomSplit.Size = new System.Drawing.Size(780, 420);
             this.bottomSplit.TabIndex = 1;
             // 
             // chartContainer
@@ -298,10 +287,9 @@
             this.chartContainer.BackColor = System.Drawing.Color.White;
             this.chartContainer.Controls.Add(this.chartLayout);
             this.chartContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chartContainer.Location = new System.Drawing.Point(17, 16);
-            this.chartContainer.Margin = new System.Windows.Forms.Padding(4);
+            this.chartContainer.Location = new System.Drawing.Point(13, 13);
             this.chartContainer.Name = "chartContainer";
-            this.chartContainer.Size = new System.Drawing.Size(499, 485);
+            this.chartContainer.Size = new System.Drawing.Size(374, 394);
             this.chartContainer.TabIndex = 0;
             // 
             // chartLayout
@@ -311,14 +299,13 @@
             this.chartLayout.Controls.Add(this.chartRevenue, 0, 1);
             this.chartLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chartLayout.Location = new System.Drawing.Point(0, 0);
-            this.chartLayout.Margin = new System.Windows.Forms.Padding(4);
             this.chartLayout.Name = "chartLayout";
-            this.chartLayout.Padding = new System.Windows.Forms.Padding(27, 0, 27, 0);
+            this.chartLayout.Padding = new System.Windows.Forms.Padding(20, 0, 20, 0);
             this.chartLayout.RowCount = 3;
             this.chartLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 15F));
             this.chartLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 70F));
             this.chartLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 15F));
-            this.chartLayout.Size = new System.Drawing.Size(499, 485);
+            this.chartLayout.Size = new System.Drawing.Size(374, 394);
             this.chartLayout.TabIndex = 0;
             // 
             // chartRevenue
@@ -328,8 +315,7 @@
             this.chartRevenue.Dock = System.Windows.Forms.DockStyle.Fill;
             legend1.Name = "Legend1";
             this.chartRevenue.Legends.Add(legend1);
-            this.chartRevenue.Location = new System.Drawing.Point(31, 76);
-            this.chartRevenue.Margin = new System.Windows.Forms.Padding(4);
+            this.chartRevenue.Location = new System.Drawing.Point(23, 62);
             this.chartRevenue.Name = "chartRevenue";
             series1.ChartArea = "ChartArea1";
             series1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
@@ -347,7 +333,7 @@
             series2.Name = "Revenue";
             this.chartRevenue.Series.Add(series1);
             this.chartRevenue.Series.Add(series2);
-            this.chartRevenue.Size = new System.Drawing.Size(437, 331);
+            this.chartRevenue.Size = new System.Drawing.Size(328, 269);
             this.chartRevenue.TabIndex = 0;
             this.chartRevenue.Text = "chart1";
             // 
@@ -356,11 +342,10 @@
             this.gridContainer.Controls.Add(this.dgvOverdue);
             this.gridContainer.Controls.Add(this.lblGridTitle);
             this.gridContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridContainer.Location = new System.Drawing.Point(524, 16);
-            this.gridContainer.Margin = new System.Windows.Forms.Padding(4);
+            this.gridContainer.Location = new System.Drawing.Point(393, 13);
             this.gridContainer.Name = "gridContainer";
-            this.gridContainer.Padding = new System.Windows.Forms.Padding(13, 12, 13, 12);
-            this.gridContainer.Size = new System.Drawing.Size(499, 485);
+            this.gridContainer.Padding = new System.Windows.Forms.Padding(10);
+            this.gridContainer.Size = new System.Drawing.Size(374, 394);
             this.gridContainer.TabIndex = 1;
             // 
             // dgvOverdue
@@ -370,13 +355,12 @@
             this.dgvOverdue.BackgroundColor = System.Drawing.Color.White;
             this.dgvOverdue.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvOverdue.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvOverdue.Location = new System.Drawing.Point(13, 40);
-            this.dgvOverdue.Margin = new System.Windows.Forms.Padding(4);
+            this.dgvOverdue.Location = new System.Drawing.Point(10, 31);
             this.dgvOverdue.Name = "dgvOverdue";
             this.dgvOverdue.ReadOnly = true;
             this.dgvOverdue.RowHeadersVisible = false;
             this.dgvOverdue.RowHeadersWidth = 51;
-            this.dgvOverdue.Size = new System.Drawing.Size(473, 433);
+            this.dgvOverdue.Size = new System.Drawing.Size(354, 353);
             this.dgvOverdue.TabIndex = 1;
             // 
             // lblGridTitle
@@ -385,26 +369,24 @@
             this.lblGridTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblGridTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblGridTitle.ForeColor = System.Drawing.Color.IndianRed;
-            this.lblGridTitle.Location = new System.Drawing.Point(13, 12);
-            this.lblGridTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblGridTitle.Location = new System.Drawing.Point(10, 10);
             this.lblGridTitle.Name = "lblGridTitle";
-            this.lblGridTitle.Size = new System.Drawing.Size(205, 28);
+            this.lblGridTitle.Size = new System.Drawing.Size(164, 21);
             this.lblGridTitle.TabIndex = 0;
             this.lblGridTitle.Text = "⚠️ Overdue Returns";
             this.lblGridTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // DashboardView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.Controls.Add(this.bottomSplit);
             this.Controls.Add(this.pnlCards);
-            this.Margin = new System.Windows.Forms.Padding(4);
-            this.MinimumSize = new System.Drawing.Size(1067, 738);
+            this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "DashboardView";
-            this.Size = new System.Drawing.Size(1067, 738);
+            this.Size = new System.Drawing.Size(800, 600);
             this.pnlCards.ResumeLayout(false);
             this.pnlCardTotal.ResumeLayout(false);
             this.pnlCardTotal.PerformLayout();

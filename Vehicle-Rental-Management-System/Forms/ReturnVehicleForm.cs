@@ -11,6 +11,7 @@ namespace Vehicle_Rental_Management_System.Forms
     {
         private int _rentalId;
         private int _vehicleId;
+        private decimal _startOdometer = 0; // To store the starting value for validation
 
         public ReturnVehicleForm(int rentalId, int vehicleId, string vehicleName, string customerName)
         {
@@ -23,11 +24,47 @@ namespace Vehicle_Rental_Management_System.Forms
             lblVehicleInfo.Text = $"Returning: {vehicleName}";
             lblCustomerInfo.Text = $"Customer: {customerName}";
 
-            // Set default date
             dtReturns.Value = DateTime.Now;
 
-            // Set default fuel level
-            cbFuels.SelectedIndex = 4; // "Full"
+       
+            cbFuels.SelectedIndex = 4; 
+
+  
+            LoadRentalDetails();
+        }
+
+        private void LoadRentalDetails()
+        {
+            string connString = ConfigurationManager.ConnectionStrings["MySqlConnection"]?.ConnectionString
+                                ?? "Server=localhost;Database=vehicle_rental_db;Uid=root;Pwd=;";
+
+            using (MySqlConnection conn = new MySqlConnection(connString))
+            {
+                try
+                {
+                    conn.Open();
+                    // FIX: We now select 'OdometerStart' (matches your database)
+                    string query = "SELECT OdometerStart FROM Rentals WHERE RentalId = @pid";
+
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@pid", _rentalId);
+                        object result = cmd.ExecuteScalar();
+
+                        if (result != null && result != DBNull.Value)
+                        {
+                            _startOdometer = Convert.ToDecimal(result);
+
+                            // Pre-fill the textbox
+                            txtOdometers.Text = _startOdometer.ToString();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error loading rental details: " + ex.Message);
+                }
+            }
         }
 
         private void btnConfirm_Click(object sender, EventArgs e)
@@ -38,7 +75,23 @@ namespace Vehicle_Rental_Management_System.Forms
                 return;
             }
 
-            string connString = ConfigurationManager.ConnectionStrings["MySqlConnection"]?.ConnectionString ?? "Server=localhost;Database=vehicle_rental_db;Uid=root;Pwd=;";
+            decimal finalOdometer = 0;
+            if (!decimal.TryParse(txtOdometers.Text, out finalOdometer))
+            {
+                MessageBox.Show("Please enter a valid number for the odometer.");
+                return;
+            }
+
+        
+            if (finalOdometer < _startOdometer)
+            {
+                MessageBox.Show($"Error: The final odometer ({finalOdometer}) cannot be lower than the starting odometer ({_startOdometer}).",
+                                "Invalid Mileage", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string connString = ConfigurationManager.ConnectionStrings["MySqlConnection"]?.ConnectionString
+                                ?? "Server=localhost;Database=vehicle_rental_db;Uid=root;Pwd=;";
 
             using (MySqlConnection conn = new MySqlConnection(connString))
             {
@@ -52,7 +105,7 @@ namespace Vehicle_Rental_Management_System.Forms
                         cmd.Parameters.AddWithValue("@p_RentalId", _rentalId);
                         cmd.Parameters.AddWithValue("@p_VehicleId", _vehicleId);
                         cmd.Parameters.AddWithValue("@p_ReturnDate", dtReturns.Value);
-                        cmd.Parameters.AddWithValue("@p_OdometerEnd", Convert.ToDecimal(txtOdometers.Text));
+                        cmd.Parameters.AddWithValue("@p_OdometerEnd", finalOdometer);
                         cmd.Parameters.AddWithValue("@p_FuelLevelEnd", cbFuels.SelectedItem.ToString());
                         cmd.Parameters.AddWithValue("@p_FinalCondition", txtConditions.Text);
 
@@ -75,7 +128,5 @@ namespace Vehicle_Rental_Management_System.Forms
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
-
-        // Remove any other methods that create controls dynamically
     }
 }

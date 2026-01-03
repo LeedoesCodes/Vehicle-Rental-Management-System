@@ -161,7 +161,7 @@
             this.btnConfirms.TabIndex = 11;
             this.btnConfirms.Text = "Complete Return";
             this.btnConfirms.UseVisualStyleBackColor = false;
-          
+            this.btnConfirms.Click += new System.EventHandler(this.btnConfirm_Click);
             // 
             // btnCancels
             // 
@@ -174,7 +174,7 @@
             this.btnCancels.TabIndex = 12;
             this.btnCancels.Text = "Cancel";
             this.btnCancels.UseVisualStyleBackColor = false;
-          
+            this.btnCancels.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // ReturnVehicleForm
             // 

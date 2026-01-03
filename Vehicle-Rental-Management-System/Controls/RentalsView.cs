@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO; // Required for file operations
 using System.Windows.Forms;
-
 using MySql.Data.MySqlClient;
 using System.Configuration;
 
@@ -18,95 +13,36 @@ namespace Vehicle_Rental_Management_System.Controls
         public RentalsView()
         {
             InitializeComponent();
-            SetupUI();
+
+            // Link the selection event
+            if (dgvRentals != null)
+                dgvRentals.SelectionChanged += DgvRentals_SelectionChanged;
+
             LoadRentals();
         }
 
-        private void SetupUI()
-        {
-            this.Size = new Size(1000, 700);
-            this.BackColor = Color.White;
-            this.Dock = DockStyle.Fill;
-
-            // 1. Title
-            Label lblTitle = new Label();
-            lblTitle.Text = "Rental Transactions";
-            lblTitle.Font = new Font("Segoe UI", 20, FontStyle.Bold);
-            lblTitle.Location = new Point(20, 20);
-            lblTitle.AutoSize = true;
-            this.Controls.Add(lblTitle);
-
-            // 2. New Rental Button
-            Button btnNewRental = new Button();
-            btnNewRental.Text = "➕ New Rental";
-            btnNewRental.BackColor = Color.FromArgb(40, 167, 69); // Green
-            btnNewRental.ForeColor = Color.White;
-            btnNewRental.FlatStyle = FlatStyle.Flat;
-            btnNewRental.FlatAppearance.BorderSize = 0;
-            btnNewRental.Size = new Size(150, 40);
-            btnNewRental.Location = new Point(20, 70);
-            btnNewRental.Click += BtnNewRental_Click;
-            this.Controls.Add(btnNewRental);
-
-            // 3. Return Vehicle Button
-            Button btnReturn = new Button();
-            btnReturn.Text = "↩ Return Vehicle";
-            btnReturn.BackColor = Color.FromArgb(255, 193, 7); // Yellow/Orange
-            btnReturn.ForeColor = Color.Black;
-            btnReturn.FlatStyle = FlatStyle.Flat;
-            btnReturn.FlatAppearance.BorderSize = 0;
-            btnReturn.Size = new Size(150, 40);
-            btnReturn.Location = new Point(180, 70);
-            btnReturn.Click += BtnReturn_Click;
-            this.Controls.Add(btnReturn);
-
-            // 4. Grid
-            DataGridView dgv = new DataGridView();
-            dgv.Name = "dgvRentals";
-            dgv.Location = new Point(20, 130);
-            dgv.Size = new Size(900, 500);
-            dgv.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
-            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgv.BackgroundColor = Color.WhiteSmoke;
-            dgv.BorderStyle = BorderStyle.None;
-            dgv.RowHeadersVisible = false;
-            dgv.AllowUserToAddRows = false;
-            dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgv.ReadOnly = true;
-            this.Controls.Add(dgv);
-        }
-
+        // ==========================================================
+        // 1. DATA LOADING
+        // ==========================================================
         public void LoadRentals()
         {
-            string connString = "Server=localhost;Database=vehicle_rental_db;Uid=root;Pwd=;";
-            if (ConfigurationManager.ConnectionStrings["MySqlConnection"] != null)
-                connString = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
+            string connString = ConfigurationManager.ConnectionStrings["MySqlConnection"]?.ConnectionString
+                                ?? "Server=localhost;Database=vehicle_rental_db;Uid=root;Pwd=;";
 
             using (MySqlConnection conn = new MySqlConnection(connString))
             {
                 try
                 {
                     conn.Open();
-                    // Use the stored procedure we just created
                     using (MySqlCommand cmd = new MySqlCommand("sp_GetAllRentals", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-
                         using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
                         {
                             DataTable dt = new DataTable();
                             adapter.Fill(dt);
-
-                            DataGridView dgv = this.Controls["dgvRentals"] as DataGridView;
-                            if (dgv != null)
-                            {
-                                dgv.DataSource = dt;
-                                // Hide the ID columns
-                                if (dgv.Columns["VehicleId"] != null) dgv.Columns["VehicleId"].Visible = false;
-                                // Format currency column if it exists
-                                if (dgv.Columns["TotalAmount"] != null)
-                                    dgv.Columns["TotalAmount"].DefaultCellStyle.Format = "C2";
-                            }
+                            dgvRentals.DataSource = dt;
+                            FormatGrid();
                         }
                     }
                 }
@@ -117,54 +53,151 @@ namespace Vehicle_Rental_Management_System.Controls
             }
         }
 
-        private void BtnNewRental_Click(object sender, EventArgs e)
+        private void FormatGrid()
         {
-            // Create and show the form
-            Forms.NewRentalForm newRental = new Forms.NewRentalForm();
+            // 1. Format Currency
+            if (dgvRentals.Columns.Contains("TotalAmount"))
+                dgvRentals.Columns["TotalAmount"].DefaultCellStyle.Format = "C2";
 
-            // If they clicked "Confirm Rental", refresh the list
-            if (newRental.ShowDialog() == DialogResult.OK)
+            // 2. Format Dates
+            if (dgvRentals.Columns.Contains("RentalDate"))
             {
-                LoadRentals(); // Reload grid to see the new rental
+                dgvRentals.Columns["RentalDate"].DefaultCellStyle.Format = "d"; // Short Date
+                dgvRentals.Columns["RentalDate"].HeaderText = "Pickup Date";
+            }
+
+            // --- BOTH RETURN COLUMNS ---
+
+            if (dgvRentals.Columns.Contains("ScheduledReturn"))
+            {
+                dgvRentals.Columns["ScheduledReturn"].DefaultCellStyle.Format = "d";
+                dgvRentals.Columns["ScheduledReturn"].HeaderText = "Scheduled Return"; // Expected Date
+            }
+
+            if (dgvRentals.Columns.Contains("ActualReturn"))
+            {
+                dgvRentals.Columns["ActualReturn"].DefaultCellStyle.Format = "d";
+                dgvRentals.Columns["ActualReturn"].HeaderText = "Actual Return"; // Real Date
+            }
+
+            // 3. Hide Technical Columns
+            string[] colsToHide = { "RentalId", "VehicleId", "CustomerId", "ImagePath" };
+            foreach (string col in colsToHide)
+            {
+                if (dgvRentals.Columns.Contains(col))
+                    dgvRentals.Columns[col].Visible = false;
             }
         }
 
-        private void BtnReturn_Click(object sender, EventArgs e)
-        {
-            DataGridView dgv = this.Controls["dgvRentals"] as DataGridView;
 
-            // 1. Check if a row is selected
-            if (dgv != null && dgv.SelectedRows.Count > 0)
+
+        private void DgvRentals_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvRentals.SelectedRows.Count > 0)
             {
-                // 2. Check if already returned
-                string status = dgv.SelectedRows[0].Cells["Status"].Value.ToString();
-                if (status == "Returned")
+                var row = dgvRentals.SelectedRows[0];
+
+                
+                if (lblDetailVehicle != null)
+                    lblDetailVehicle.Text = row.Cells["VehicleName"].Value?.ToString() ?? "Unknown";
+
+                if (lblDetailCustomer != null)
+                    lblDetailCustomer.Text = "Renter: " + (row.Cells["CustomerName"].Value?.ToString() ?? "Unknown");
+
+                if (lblDetailAmount != null)
+                    lblDetailAmount.Text = "Total: " + (Convert.ToDecimal(row.Cells["TotalAmount"].Value).ToString("C2"));
+
+                
+                if (lblDetailDates != null && row.Cells["RentalDate"].Value != DBNull.Value)
                 {
-                    MessageBox.Show("This vehicle has already been returned.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
+                    string start = Convert.ToDateTime(row.Cells["RentalDate"].Value).ToShortDateString();
+                    string end = "-";
+                    if (row.Cells["ScheduledReturn"].Value != DBNull.Value)
+                        end = Convert.ToDateTime(row.Cells["ScheduledReturn"].Value).ToShortDateString();
+
+                    lblDetailDates.Text = $"{start} to {end}";
                 }
 
-                // 3. Get Data from Grid
-                int rentalId = Convert.ToInt32(dgv.SelectedRows[0].Cells["RentalId"].Value);
-                // Note: Ensure your grid actually has VehicleId hidden or visible. 
-                // If sp_GetAllRentals includes it, it will be in the datasource even if not visible.
-                int vehicleId = Convert.ToInt32(dgv.SelectedRows[0].Cells["VehicleId"].Value);
-                string vehicleName = dgv.SelectedRows[0].Cells["VehicleName"].Value.ToString();
-                string customerName = dgv.SelectedRows[0].Cells["CustomerName"].Value.ToString();
-
-                // 4. Open Return Form
-                Forms.ReturnVehicleForm returnForm = new Forms.ReturnVehicleForm(rentalId, vehicleId, vehicleName, customerName);
-
-                if (returnForm.ShowDialog() == DialogResult.OK)
+                
+                string imagePath = "";
+               
+                if (dgvRentals.Columns.Contains("ImagePath") && row.Cells["ImagePath"].Value != DBNull.Value)
                 {
-                    // 5. Refresh Grid to show updated status
-                    LoadRentals();
+                    imagePath = row.Cells["ImagePath"].Value.ToString();
+                }
+
+                ShowVehiclePreview(imagePath);
+            }
+        }
+
+        private void ShowVehiclePreview(string path)
+        {
+           
+            if (pbVehicle.Image != null)
+            {
+                pbVehicle.Image.Dispose();
+                pbVehicle.Image = null;
+            }
+
+            
+            if (!string.IsNullOrEmpty(path) && File.Exists(path))
+            {
+                try
+                {
+                    
+                    pbVehicle.Image = Image.FromFile(path);
+                }
+                catch
+                {
+                    ShowDefaultImage();
                 }
             }
             else
             {
-                MessageBox.Show("Please select a rental transaction to return.", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ShowDefaultImage();
             }
+        }
+
+        private void ShowDefaultImage()
+        {
+            // Draw a simple placeholder if no image found
+            Bitmap bmp = new Bitmap(Math.Max(1, pbVehicle.Width), Math.Max(1, pbVehicle.Height));
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                g.Clear(Color.WhiteSmoke);
+                g.DrawString("No Image", new Font("Arial", 10, FontStyle.Bold),
+                             Brushes.Gray, new RectangleF(0, 0, bmp.Width, bmp.Height),
+                             new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
+            }
+            pbVehicle.Image = bmp;
+        }
+
+
+
+        private void BtnNewRental_Click(object sender, EventArgs e)
+        {
+            Forms.NewRentalForm form = new Forms.NewRentalForm();
+            if (form.ShowDialog() == DialogResult.OK) LoadRentals();
+        }
+
+        private void BtnReturn_Click(object sender, EventArgs e)
+        {
+            if (dgvRentals.SelectedRows.Count == 0) return;
+
+            string status = dgvRentals.SelectedRows[0].Cells["Status"].Value.ToString();
+            if (status == "Returned")
+            {
+                MessageBox.Show("Already returned.");
+                return;
+            }
+
+            int rentalId = Convert.ToInt32(dgvRentals.SelectedRows[0].Cells["RentalId"].Value);
+            int vehicleId = Convert.ToInt32(dgvRentals.SelectedRows[0].Cells["VehicleId"].Value);
+            string vName = lblDetailVehicle.Text;
+            string cName = lblDetailCustomer.Text.Replace("Renter: ", "");
+
+            Forms.ReturnVehicleForm form = new Forms.ReturnVehicleForm(rentalId, vehicleId, vName, cName);
+            if (form.ShowDialog() == DialogResult.OK) LoadRentals();
         }
     }
 }

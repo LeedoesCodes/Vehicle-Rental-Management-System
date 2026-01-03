@@ -34,6 +34,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.picVehiclePreview)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVehicles)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
@@ -47,7 +48,6 @@
             this.label1.Size = new System.Drawing.Size(120, 37);
             this.label1.TabIndex = 0;
             this.label1.Text = "Vehicles";
-            
             // 
             // pnlButtons
             // 
@@ -122,14 +122,15 @@
             this.dgvVehicles.BackgroundColor = System.Drawing.Color.WhiteSmoke;
             this.dgvVehicles.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvVehicles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvVehicles.Location = new System.Drawing.Point(20, 130);
+            this.dgvVehicles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvVehicles.Location = new System.Drawing.Point(0, 0);
             this.dgvVehicles.MultiSelect = false;
             this.dgvVehicles.Name = "dgvVehicles";
             this.dgvVehicles.ReadOnly = true;
             this.dgvVehicles.RowHeadersVisible = false;
             this.dgvVehicles.RowHeadersWidth = 51;
             this.dgvVehicles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvVehicles.Size = new System.Drawing.Size(720, 421);
+            this.dgvVehicles.Size = new System.Drawing.Size(750, 421);
             this.dgvVehicles.TabIndex = 2;
             // 
             // splitContainer1
@@ -139,14 +140,14 @@
             // 
             // splitContainer1.Panel1
             // 
-         
+            this.splitContainer1.Panel1.Controls.Add(this.dgvVehicles);
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.lblVehicleDetails);
             this.splitContainer1.Panel2.Controls.Add(this.picVehiclePreview);
-            this.splitContainer1.Size = new System.Drawing.Size(1064, 421);
-            this.splitContainer1.SplitterDistance = 723;
+            this.splitContainer1.Size = new System.Drawing.Size(1104, 421);
+            this.splitContainer1.SplitterDistance = 750;
             this.splitContainer1.TabIndex = 5;
             // 
             // VehiclesView
@@ -154,14 +155,14 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.pnlButtons);
-            this.Controls.Add(this.dgvVehicles);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.splitContainer1);
             this.Name = "VehiclesView";
-            this.Size = new System.Drawing.Size(1126, 610);
+            this.Size = new System.Drawing.Size(1158, 610);
             this.pnlButtons.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picVehiclePreview)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVehicles)).EndInit();
+            this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);

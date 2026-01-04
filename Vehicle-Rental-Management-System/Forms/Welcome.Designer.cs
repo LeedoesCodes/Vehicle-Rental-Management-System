@@ -76,11 +76,12 @@
             // btnProceed
             // 
             this.btnProceed.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.btnProceed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnProceed.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnProceed.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnProceed.Location = new System.Drawing.Point(974, 525);
+            this.btnProceed.Location = new System.Drawing.Point(794, 525);
             this.btnProceed.Name = "btnProceed";
-            this.btnProceed.Size = new System.Drawing.Size(133, 63);
+            this.btnProceed.Size = new System.Drawing.Size(313, 63);
             this.btnProceed.TabIndex = 3;
             this.btnProceed.Text = "Proceed ->";
             this.btnProceed.UseVisualStyleBackColor = false;

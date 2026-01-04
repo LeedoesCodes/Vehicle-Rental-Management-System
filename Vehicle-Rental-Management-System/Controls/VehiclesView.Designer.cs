@@ -30,6 +30,7 @@
             this.lblVehicleDetails = new System.Windows.Forms.Label();
             this.dgvVehicles = new System.Windows.Forms.DataGridView();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.mySqlCommand1 = new MySql.Data.MySqlClient.MySqlCommand();
             this.pnlButtons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picVehiclePreview)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVehicles)).BeginInit();
@@ -43,7 +44,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(22, 30);
+            this.label1.Location = new System.Drawing.Point(5, 12);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(120, 37);
             this.label1.TabIndex = 0;
@@ -52,18 +53,21 @@
             // pnlButtons
             // 
             this.pnlButtons.Controls.Add(this.btnDelete);
+            this.pnlButtons.Controls.Add(this.label1);
             this.pnlButtons.Controls.Add(this.btnEdit);
             this.pnlButtons.Controls.Add(this.btnAdd);
-            this.pnlButtons.Location = new System.Drawing.Point(20, 70);
+            this.pnlButtons.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlButtons.Location = new System.Drawing.Point(0, 0);
             this.pnlButtons.Name = "pnlButtons";
-            this.pnlButtons.Size = new System.Drawing.Size(460, 40);
+            this.pnlButtons.Size = new System.Drawing.Size(1000, 107);
             this.pnlButtons.TabIndex = 1;
             // 
             // btnDelete
             // 
             this.btnDelete.BackColor = System.Drawing.Color.IndianRed;
+            this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDelete.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnDelete.Location = new System.Drawing.Point(307, 0);
+            this.btnDelete.Location = new System.Drawing.Point(321, 52);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(150, 40);
             this.btnDelete.TabIndex = 2;
@@ -74,8 +78,9 @@
             // btnEdit
             // 
             this.btnEdit.BackColor = System.Drawing.Color.YellowGreen;
+            this.btnEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEdit.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnEdit.Location = new System.Drawing.Point(155, 0);
+            this.btnEdit.Location = new System.Drawing.Point(167, 52);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(150, 40);
             this.btnEdit.TabIndex = 1;
@@ -86,8 +91,9 @@
             // btnAdd
             // 
             this.btnAdd.BackColor = System.Drawing.SystemColors.HotTrack;
+            this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAdd.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnAdd.Location = new System.Drawing.Point(0, 0);
+            this.btnAdd.Location = new System.Drawing.Point(12, 52);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(150, 40);
             this.btnAdd.TabIndex = 0;
@@ -98,7 +104,7 @@
             // picVehiclePreview
             // 
             this.picVehiclePreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picVehiclePreview.Location = new System.Drawing.Point(51, 0);
+            this.picVehiclePreview.Location = new System.Drawing.Point(34, 12);
             this.picVehiclePreview.Name = "picVehiclePreview";
             this.picVehiclePreview.Size = new System.Drawing.Size(234, 200);
             this.picVehiclePreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -109,7 +115,7 @@
             // lblVehicleDetails
             // 
             this.lblVehicleDetails.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblVehicleDetails.Location = new System.Drawing.Point(66, 76);
+            this.lblVehicleDetails.Location = new System.Drawing.Point(50, 167);
             this.lblVehicleDetails.Name = "lblVehicleDetails";
             this.lblVehicleDetails.Size = new System.Drawing.Size(202, 40);
             this.lblVehicleDetails.TabIndex = 4;
@@ -130,12 +136,13 @@
             this.dgvVehicles.RowHeadersVisible = false;
             this.dgvVehicles.RowHeadersWidth = 51;
             this.dgvVehicles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvVehicles.Size = new System.Drawing.Size(750, 421);
+            this.dgvVehicles.Size = new System.Drawing.Size(695, 593);
             this.dgvVehicles.TabIndex = 2;
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Location = new System.Drawing.Point(20, 130);
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 107);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -146,20 +153,27 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.lblVehicleDetails);
             this.splitContainer1.Panel2.Controls.Add(this.picVehiclePreview);
-            this.splitContainer1.Size = new System.Drawing.Size(1104, 421);
-            this.splitContainer1.SplitterDistance = 750;
+            this.splitContainer1.Size = new System.Drawing.Size(1000, 593);
+            this.splitContainer1.SplitterDistance = 695;
             this.splitContainer1.TabIndex = 5;
+            // 
+            // mySqlCommand1
+            // 
+            this.mySqlCommand1.CacheAge = 0;
+            this.mySqlCommand1.Connection = null;
+            this.mySqlCommand1.EnableCaching = false;
+            this.mySqlCommand1.Transaction = null;
             // 
             // VehiclesView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.pnlButtons);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.pnlButtons);
             this.Name = "VehiclesView";
-            this.Size = new System.Drawing.Size(1158, 610);
+            this.Size = new System.Drawing.Size(1000, 700);
             this.pnlButtons.ResumeLayout(false);
+            this.pnlButtons.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picVehiclePreview)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVehicles)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -167,7 +181,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -182,5 +195,6 @@
         private System.Windows.Forms.Label lblVehicleDetails;
         private System.Windows.Forms.DataGridView dgvVehicles;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private MySql.Data.MySqlClient.MySqlCommand mySqlCommand1;
     }
 }

@@ -11,7 +11,7 @@ namespace Vehicle_Rental_Management_System.Forms
     {
         private int _rentalId;
         private int _vehicleId;
-        private decimal _startOdometer = 0; // To store the starting value for validation
+        private decimal _startOdometer = 0; 
 
         public ReturnVehicleForm(int rentalId, int vehicleId, string vehicleName, string customerName)
         {
@@ -20,7 +20,7 @@ namespace Vehicle_Rental_Management_System.Forms
             _rentalId = rentalId;
             _vehicleId = vehicleId;
 
-            // Set the labels with actual data
+          
             lblVehicleInfo.Text = $"Returning: {vehicleName}";
             lblCustomerInfo.Text = $"Customer: {customerName}";
 
@@ -43,7 +43,7 @@ namespace Vehicle_Rental_Management_System.Forms
                 try
                 {
                     conn.Open();
-                    // FIX: We now select 'OdometerStart' (matches your database)
+                 
                     string query = "SELECT OdometerStart FROM Rentals WHERE RentalId = @pid";
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
@@ -55,7 +55,7 @@ namespace Vehicle_Rental_Management_System.Forms
                         {
                             _startOdometer = Convert.ToDecimal(result);
 
-                            // Pre-fill the textbox
+                            
                             txtOdometers.Text = _startOdometer.ToString();
                         }
                     }

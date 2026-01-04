@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-// Ensure this matches your project structure
+
 using Vehicle_Rental_Management_System.Controls;
 
 namespace Vehicle_Rental_Management_System.Forms
 {
     public partial class MainForm : Form
     {
-        // Navigation State
+   
         private Button activeButton = null;
         private Color normalColor = Color.FromArgb(33, 33, 33);
         private Color hoverColor = Color.FromArgb(50, 50, 50);
@@ -22,30 +22,30 @@ namespace Vehicle_Rental_Management_System.Forms
 
         private void SetupForm()
         {
-            // 1. User Info
+          
             if (lbluserInfo != null)
             {
                 lbluserInfo.Text = $"Welcome,\n{Program.CurrentUsername}\n({Program.CurrentUserRole})";
             }
             this.Text = $"Vehicle Rental System - {Program.CurrentUsername}";
 
-            // 2. Role Security
+            
             if (Program.CurrentUserRole != "Admin" && btnAdmin != null)
             {
                 btnAdmin.Visible = false;
             }
 
-            // 3. Setup Buttons
+           
             SetupButtonEvents();
 
-            // 4. Default View
+       
             ActivateButton(btnDashboard);
             ShowDashboard();
         }
 
         private void SetupButtonEvents()
         {
-            // Note: Added btnReservation to this list
+            
             Button[] navButtons = {
                 btnDashboard,
                 btnVehicles,
@@ -62,7 +62,7 @@ namespace Vehicle_Rental_Management_System.Forms
                 {
                     if (button == btnAdmin && !btnAdmin.Visible) continue;
 
-                    // Base Style
+                    
                     button.FlatStyle = FlatStyle.Flat;
                     button.FlatAppearance.BorderSize = 0;
                     button.BackColor = normalColor;
@@ -71,14 +71,13 @@ namespace Vehicle_Rental_Management_System.Forms
                     button.TextAlign = ContentAlignment.MiddleLeft;
                     button.Padding = new Padding(15, 0, 0, 0);
 
-                    // Events
+                    
                     button.Click += NavButton_Click;
                     button.MouseEnter += Button_MouseEnter;
                     button.MouseLeave += Button_MouseLeave;
                 }
             }
 
-            // Logout Button
             if (btnLogout != null)
             {
                 btnLogout.FlatStyle = FlatStyle.Flat;
@@ -94,10 +93,7 @@ namespace Vehicle_Rental_Management_System.Forms
             }
         }
 
-        // =============================================================
-        // NAVIGATION LOGIC
-        // =============================================================
-
+        
         private void NavButton_Click(object sender, EventArgs e)
         {
             Button clickedButton = sender as Button;
@@ -157,9 +153,7 @@ namespace Vehicle_Rental_Management_System.Forms
             }
         }
 
-        // =============================================================
-        // PAGE LOADERS
-        // =============================================================
+        
 
         private void ShowDashboard()
         {
@@ -189,8 +183,7 @@ namespace Vehicle_Rental_Management_System.Forms
         {
             contentPanel.Controls.Clear();
 
-            // --- UPDATED: Now loads the actual Reservations View ---
-            // Ensure you have created the ReservationsView.cs file
+            
             var view = new ReservationsView();
             view.Dock = DockStyle.Fill;
             contentPanel.Controls.Add(view);
@@ -200,25 +193,14 @@ namespace Vehicle_Rental_Management_System.Forms
         {
             contentPanel.Controls.Clear();
 
-            Label lblTitle = new Label();
-            lblTitle.Text = "Customer Management";
-            lblTitle.Font = new Font("Segoe UI", 16, FontStyle.Bold);
-            lblTitle.ForeColor = Color.FromArgb(0, 120, 215);
-            lblTitle.AutoSize = true;
-            lblTitle.Location = new Point(50, 30);
-            contentPanel.Controls.Add(lblTitle);
+            
+            var view = new CustomersView();
 
-            Button btnAdd = CreateActionButton("➕ Add New Customer", 50, 90, Color.FromArgb(40, 167, 69));
-            btnAdd.Click += (s, e) => OpenAddCustomerForm();
-            contentPanel.Controls.Add(btnAdd);
+         
+            view.Dock = DockStyle.Fill;
 
-            Button btnView = CreateActionButton("👥 View All Customers", 250, 90, Color.FromArgb(0, 123, 255));
-            btnView.Click += (s, e) => OpenCustomerListForm();
-            contentPanel.Controls.Add(btnView);
-
-            Button btnSearch = CreateActionButton("🔍 Search Customers", 450, 90, Color.FromArgb(108, 117, 125));
-            btnSearch.Click += (s, e) => SearchCustomers();
-            contentPanel.Controls.Add(btnSearch);
+     
+            contentPanel.Controls.Add(view);
         }
 
         private void ShowReports()
@@ -234,10 +216,6 @@ namespace Vehicle_Rental_Management_System.Forms
             Label lbl = new Label { Text = "Admin Panel", Font = new Font("Segoe UI", 16, FontStyle.Bold), Location = new Point(50, 30), AutoSize = true };
             contentPanel.Controls.Add(lbl);
         }
-
-        // =============================================================
-        // HELPER METHODS
-        // =============================================================
 
         private Button CreateActionButton(string text, int x, int y, Color color)
         {
@@ -306,9 +284,7 @@ namespace Vehicle_Rental_Management_System.Forms
             }
         }
 
-        // =============================================================
-        // EMPTY EVENT HANDLERS (Preserved for Designer Safety)
-        // =============================================================
+       
         private void navButtonsPanel_Paint(object sender, PaintEventArgs e) { }
         private void btnDashboard_Click(object sender, EventArgs e) { }
         private void button1_Click(object sender, EventArgs e) { }

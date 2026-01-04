@@ -14,11 +14,11 @@ namespace Vehicle_Rental_Management_System.Services
 
             try
             {
-                // Using stored procedure instead of inline SQL
+              
                 using (var reader = ExecuteStoredProcedure(
                     "AuthenticateUser",
                     new MySqlParameter("@p_username", username),
-                    new MySqlParameter("@p_password", password) // Plain text comparison
+                    new MySqlParameter("@p_password", password) 
                 ))
                 {
                     if (reader.Read())
@@ -41,7 +41,7 @@ namespace Vehicle_Rental_Management_System.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"Authentication error: {ex.Message}");
-                // Log the error properly in production
+         
             }
 
             return null;

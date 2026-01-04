@@ -66,7 +66,7 @@
             this.sidePanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.sidePanel.Location = new System.Drawing.Point(0, 0);
             this.sidePanel.Name = "sidePanel";
-            this.sidePanel.Size = new System.Drawing.Size(220, 510);
+            this.sidePanel.Size = new System.Drawing.Size(220, 564);
             this.sidePanel.TabIndex = 0;
             // 
             // navButtonsPanel
@@ -85,7 +85,7 @@
             this.navButtonsPanel.Location = new System.Drawing.Point(0, 100);
             this.navButtonsPanel.Name = "navButtonsPanel";
             this.navButtonsPanel.Padding = new System.Windows.Forms.Padding(10);
-            this.navButtonsPanel.Size = new System.Drawing.Size(220, 410);
+            this.navButtonsPanel.Size = new System.Drawing.Size(220, 464);
             this.navButtonsPanel.TabIndex = 1;
             this.navButtonsPanel.WrapContents = false;
             // 
@@ -249,7 +249,7 @@
             this.contentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.contentPanel.Location = new System.Drawing.Point(220, 65);
             this.contentPanel.Name = "contentPanel";
-            this.contentPanel.Size = new System.Drawing.Size(580, 445);
+            this.contentPanel.Size = new System.Drawing.Size(630, 499);
             this.contentPanel.TabIndex = 1;
             // 
             // pnlHeader
@@ -257,14 +257,14 @@
             this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlHeader.Location = new System.Drawing.Point(220, 0);
             this.pnlHeader.Name = "pnlHeader";
-            this.pnlHeader.Size = new System.Drawing.Size(580, 65);
+            this.pnlHeader.Size = new System.Drawing.Size(630, 65);
             this.pnlHeader.TabIndex = 2;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 510);
+            this.ClientSize = new System.Drawing.Size(850, 564);
             this.Controls.Add(this.contentPanel);
             this.Controls.Add(this.pnlHeader);
             this.Controls.Add(this.sidePanel);

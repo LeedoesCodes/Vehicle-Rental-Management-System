@@ -55,18 +55,17 @@ namespace Vehicle_Rental_Management_System.Controls
 
         private void FormatGrid()
         {
-            // 1. Format Currency
+            
             if (dgvRentals.Columns.Contains("TotalAmount"))
                 dgvRentals.Columns["TotalAmount"].DefaultCellStyle.Format = "C2";
 
-            // 2. Format Dates
+            
             if (dgvRentals.Columns.Contains("RentalDate"))
             {
-                dgvRentals.Columns["RentalDate"].DefaultCellStyle.Format = "d"; // Short Date
+                dgvRentals.Columns["RentalDate"].DefaultCellStyle.Format = "d"; 
                 dgvRentals.Columns["RentalDate"].HeaderText = "Pickup Date";
             }
 
-            // --- BOTH RETURN COLUMNS ---
 
             if (dgvRentals.Columns.Contains("ScheduledReturn"))
             {

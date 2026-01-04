@@ -32,7 +32,7 @@
             this.lblTitle = new System.Windows.Forms.Label();
             this.btnNewReservation = new System.Windows.Forms.Button();
             this.btnCancelReservation = new System.Windows.Forms.Button();
-            this.dgvReservation = new System.Windows.Forms.DataGridView();
+            this.dgvReservations = new System.Windows.Forms.DataGridView();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.lblDetailAmount = new System.Windows.Forms.Label();
             this.lblDetailDates = new System.Windows.Forms.Label();
@@ -40,7 +40,7 @@
             this.lblDetailVehicle = new System.Windows.Forms.Label();
             this.pbVehicle = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvReservation)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvReservations)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -81,6 +81,7 @@
             this.btnNewReservation.TabIndex = 1;
             this.btnNewReservation.Text = "➕ New Reservation";
             this.btnNewReservation.UseVisualStyleBackColor = false;
+            this.btnNewReservation.Click += new System.EventHandler(this.BtnNewReservation_Click);
             // 
             // btnCancelReservation
             // 
@@ -94,22 +95,24 @@
             this.btnCancelReservation.TabIndex = 2;
             this.btnCancelReservation.Text = "X Cancel Reservation";
             this.btnCancelReservation.UseVisualStyleBackColor = false;
+            this.btnCancelReservation.Click += new System.EventHandler(this.BtnCancel_Click);
             // 
-            // dgvReservation
+            // dgvReservations
             // 
-            this.dgvReservation.AllowUserToAddRows = false;
-            this.dgvReservation.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvReservation.BackgroundColor = System.Drawing.Color.WhiteSmoke;
-            this.dgvReservation.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dgvReservation.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvReservation.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvReservation.Location = new System.Drawing.Point(0, 0);
-            this.dgvReservation.Name = "dgvReservation";
-            this.dgvReservation.ReadOnly = true;
-            this.dgvReservation.RowHeadersVisible = false;
-            this.dgvReservation.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvReservation.Size = new System.Drawing.Size(864, 457);
-            this.dgvReservation.TabIndex = 3;
+            this.dgvReservations.AllowUserToAddRows = false;
+            this.dgvReservations.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvReservations.BackgroundColor = System.Drawing.Color.WhiteSmoke;
+            this.dgvReservations.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dgvReservations.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvReservations.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvReservations.Location = new System.Drawing.Point(0, 0);
+            this.dgvReservations.Name = "dgvReservations";
+            this.dgvReservations.ReadOnly = true;
+            this.dgvReservations.RowHeadersVisible = false;
+            this.dgvReservations.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvReservations.Size = new System.Drawing.Size(864, 457);
+            this.dgvReservations.TabIndex = 3;
+            this.dgvReservations.Click += new System.EventHandler(this.DgvReservations_SelectionChanged);
             // 
             // splitContainer1
             // 
@@ -118,7 +121,7 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.dgvReservation);
+            this.splitContainer1.Panel1.Controls.Add(this.dgvReservations);
             // 
             // splitContainer1.Panel2
             // 
@@ -188,7 +191,7 @@
             this.Size = new System.Drawing.Size(1223, 600);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvReservation)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvReservations)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
@@ -205,7 +208,7 @@
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.Button btnNewReservation;
         private System.Windows.Forms.Button btnCancelReservation;
-        private System.Windows.Forms.DataGridView dgvReservation;
+        private System.Windows.Forms.DataGridView dgvReservations;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Label lblDetailAmount;
         private System.Windows.Forms.Label lblDetailDates;

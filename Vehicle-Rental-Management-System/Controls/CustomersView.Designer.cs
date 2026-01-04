@@ -39,9 +39,12 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.btnCamera = new System.Windows.Forms.Button();
+            this.btnUploadPhoto = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.txtLastName = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label13 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.lblAgeCheck = new System.Windows.Forms.Label();
@@ -82,9 +85,6 @@
             this.chkLoyalty = new System.Windows.Forms.CheckBox();
             this.cbCustomerType = new System.Windows.Forms.ComboBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.btnUploadPhoto = new System.Windows.Forms.Button();
-            this.btnCamera = new System.Windows.Forms.Button();
-            this.label13 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -159,22 +159,23 @@
             this.panel2.Controls.Add(this.btnDelete);
             this.panel2.Controls.Add(this.btnSave);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 592);
+            this.panel2.Location = new System.Drawing.Point(0, 589);
             this.panel2.Margin = new System.Windows.Forms.Padding(10);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(596, 108);
+            this.panel2.Size = new System.Drawing.Size(596, 111);
             this.panel2.TabIndex = 1;
             // 
             // btnClear
             // 
             this.btnClear.BackColor = System.Drawing.SystemColors.InactiveCaption;
             this.btnClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClear.ForeColor = System.Drawing.Color.White;
-            this.btnClear.Location = new System.Drawing.Point(428, 14);
+            this.btnClear.Location = new System.Drawing.Point(428, 25);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(147, 63);
             this.btnClear.TabIndex = 2;
-            this.btnClear.Text = "Clear / New";
+            this.btnClear.Text = "🧹 Clear / New";
             this.btnClear.UseVisualStyleBackColor = false;
             this.btnClear.Click += new System.EventHandler(this.BtnClear_Click);
             // 
@@ -182,12 +183,13 @@
             // 
             this.btnDelete.BackColor = System.Drawing.Color.IndianRed;
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDelete.ForeColor = System.Drawing.Color.White;
-            this.btnDelete.Location = new System.Drawing.Point(225, 13);
+            this.btnDelete.Location = new System.Drawing.Point(215, 24);
             this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(147, 64);
+            this.btnDelete.Size = new System.Drawing.Size(163, 64);
             this.btnDelete.TabIndex = 1;
-            this.btnDelete.Text = "Delete Customer";
+            this.btnDelete.Text = "🗑️ Delete Customer";
             this.btnDelete.UseVisualStyleBackColor = false;
             this.btnDelete.Click += new System.EventHandler(this.BtnDelete_Click);
             // 
@@ -195,12 +197,13 @@
             // 
             this.btnSave.BackColor = System.Drawing.Color.LimeGreen;
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSave.ForeColor = System.Drawing.Color.White;
-            this.btnSave.Location = new System.Drawing.Point(20, 14);
+            this.btnSave.Location = new System.Drawing.Point(20, 25);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(147, 63);
             this.btnSave.TabIndex = 0;
-            this.btnSave.Text = "Save Changes";
+            this.btnSave.Text = "💾 Save Changes";
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.BtnSave_Click);
             // 
@@ -241,6 +244,30 @@
             this.tabPage1.Text = "Personal Profile";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // btnCamera
+            // 
+            this.btnCamera.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCamera.Location = new System.Drawing.Point(196, 142);
+            this.btnCamera.Name = "btnCamera";
+            this.btnCamera.Size = new System.Drawing.Size(70, 25);
+            this.btnCamera.TabIndex = 14;
+            this.btnCamera.Text = "📷 Camera";
+            this.btnCamera.UseVisualStyleBackColor = true;
+            this.btnCamera.Click += new System.EventHandler(this.BtnCamera_Click);
+            // 
+            // btnUploadPhoto
+            // 
+            this.btnUploadPhoto.BackColor = System.Drawing.Color.DodgerBlue;
+            this.btnUploadPhoto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUploadPhoto.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.btnUploadPhoto.Location = new System.Drawing.Point(196, 109);
+            this.btnUploadPhoto.Name = "btnUploadPhoto";
+            this.btnUploadPhoto.Size = new System.Drawing.Size(70, 25);
+            this.btnUploadPhoto.TabIndex = 13;
+            this.btnUploadPhoto.Text = "📂 Upload";
+            this.btnUploadPhoto.UseVisualStyleBackColor = false;
+            this.btnUploadPhoto.Click += new System.EventHandler(this.BtnUploadPhoto_Click);
+            // 
             // label12
             // 
             this.label12.AutoSize = true;
@@ -272,6 +299,16 @@
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Emergency Contact";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(22, 67);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(88, 17);
+            this.label13.TabIndex = 6;
+            this.label13.Text = "Date of Birth";
             // 
             // label7
             // 
@@ -397,7 +434,6 @@
             this.label1.Size = new System.Drawing.Size(82, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "Customer Photo";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // picCustomerPhoto
             // 
@@ -643,40 +679,6 @@
             // 
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
-            // 
-            // btnUploadPhoto
-            // 
-            this.btnUploadPhoto.BackColor = System.Drawing.Color.DodgerBlue;
-            this.btnUploadPhoto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnUploadPhoto.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnUploadPhoto.Location = new System.Drawing.Point(196, 109);
-            this.btnUploadPhoto.Name = "btnUploadPhoto";
-            this.btnUploadPhoto.Size = new System.Drawing.Size(70, 25);
-            this.btnUploadPhoto.TabIndex = 13;
-            this.btnUploadPhoto.Text = "📂 Upload";
-            this.btnUploadPhoto.UseVisualStyleBackColor = false;
-            this.btnUploadPhoto.Click += new System.EventHandler(this.BtnUploadPhoto_Click);
-            // 
-            // btnCamera
-            // 
-            this.btnCamera.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCamera.Location = new System.Drawing.Point(196, 142);
-            this.btnCamera.Name = "btnCamera";
-            this.btnCamera.Size = new System.Drawing.Size(70, 25);
-            this.btnCamera.TabIndex = 14;
-            this.btnCamera.Text = "📷 Camera";
-            this.btnCamera.UseVisualStyleBackColor = true;
-            this.btnCamera.Click += new System.EventHandler(this.BtnCamera_Click);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(22, 67);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(88, 17);
-            this.label13.TabIndex = 6;
-            this.label13.Text = "Date of Birth";
             // 
             // CustomersView
             // 

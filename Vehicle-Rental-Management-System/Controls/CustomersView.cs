@@ -57,23 +57,15 @@ namespace Vehicle_Rental_Management_System.Controls
         }
 
         // ==========================================================
-        // 🛠️ HELPER: Get the 'Assets' Folder in your Project
+        // 🛠️ HELPER: Get the 'Assets' Folder
         // ==========================================================
         private string GetProjectImagesFolder()
         {
-            // This trick finds your Source Code folder by going Up 2 levels from 'bin/Debug'
-            // NOTE: This works perfectly in Visual Studio. 
+            // Navigates up from bin/Debug to the project root
             string projectPath = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.FullName;
-
-            // Define the structure: Assets -> Images -> Customers
             string targetFolder = Path.Combine(projectPath, "Assets", "Images", "Customers");
 
-            // Create it if it doesn't exist
-            if (!Directory.Exists(targetFolder))
-            {
-                Directory.CreateDirectory(targetFolder);
-            }
-
+            if (!Directory.Exists(targetFolder)) Directory.CreateDirectory(targetFolder);
             return targetFolder;
         }
 
@@ -132,9 +124,9 @@ namespace Vehicle_Rental_Management_System.Controls
         private void FormatGrid()
         {
             if (dgvCustomers == null) return;
-            string[] hide = { "CustomerId", "LicenseNumber", "LicenseExpiry", "DOB", "Address",
+            string[] hide = { "CustomerId", "LicenseNumber", "LicenseExpiry", "DOB", "Address", "LicenseState",
                               "CustomerType", "EmergencyContactName", "EmergencyContactPhone",
-                              "IsBlacklisted", "CreatedDate", "PhotoPath" };
+                              "IsBlacklisted", "CreatedDate", "PhotoPath", "DateOfBirth" };
 
             foreach (var col in hide)
                 if (dgvCustomers.Columns.Contains(col)) dgvCustomers.Columns[col].Visible = false;
@@ -163,9 +155,15 @@ namespace Vehicle_Rental_Management_System.Controls
                 if (txtEmergencyPhone != null) txtEmergencyPhone.Text = row.Cells["EmergencyContactPhone"].Value?.ToString();
                 if (txtLicenseNum != null) txtLicenseNum.Text = row.Cells["LicenseNumber"].Value?.ToString();
 
+                // NEW: Load State
+                if (txtLicenseState != null && dgvCustomers.Columns.Contains("LicenseState") && row.Cells["LicenseState"].Value != DBNull.Value)
+                    txtLicenseState.Text = row.Cells["LicenseState"].Value.ToString();
+
                 // --- Dates ---
-                if (dtpDOB != null && row.Cells["DOB"].Value != DBNull.Value)
-                    dtpDOB.Value = Convert.ToDateTime(row.Cells["DOB"].Value);
+                // Handle different potential column names for DOB
+                string dobCol = dgvCustomers.Columns.Contains("DateOfBirth") ? "DateOfBirth" : "DOB";
+                if (dgvCustomers.Columns.Contains(dobCol) && row.Cells[dobCol].Value != DBNull.Value && dtpDOB != null)
+                    dtpDOB.Value = Convert.ToDateTime(row.Cells[dobCol].Value);
 
                 if (dtpExpiryDate != null && row.Cells["LicenseExpiry"].Value != DBNull.Value)
                     dtpExpiryDate.Value = Convert.ToDateTime(row.Cells["LicenseExpiry"].Value);
@@ -181,36 +179,58 @@ namespace Vehicle_Rental_Management_System.Controls
                     fileName = row.Cells["PhotoPath"].Value.ToString();
                 }
 
-                // If the DB has "my_pic.jpg", we combine it with the project folder path
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     string fullPath = Path.Combine(GetProjectImagesFolder(), fileName);
                     LoadCustomerImage(fullPath);
                 }
-                else
-                {
-                    LoadCustomerImage(null); // Clear image
-                }
+                else LoadCustomerImage(null);
 
-                LoadCustomerStats(_selectedCustomerId);
+                // --- Load History (New Feature) ---
+                LoadRentalHistory(_selectedCustomerId);
 
                 if (btnSave != null) btnSave.Text = "Update Customer";
                 _newPhotoTempPath = ""; // Reset temp
             }
         }
 
+        private void LoadRentalHistory(int customerId)
+        {
+            if (dgvHistory == null) return;
+
+            using (MySqlConnection conn = new MySqlConnection(connString))
+            {
+                try
+                {
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand("sp_GetCustomerHistory", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@p_CustomerId", customerId);
+                        using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
+                        {
+                            DataTable dt = new DataTable();
+                            adapter.Fill(dt);
+                            dgvHistory.DataSource = dt;
+                            // Basic Format
+                            if (dgvHistory.Columns.Contains("TotalAmount")) dgvHistory.Columns["TotalAmount"].DefaultCellStyle.Format = "C2";
+                            dgvHistory.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                        }
+                    }
+                }
+                catch { /* Ignore if history SP isn't made yet */ }
+            }
+        }
+
         private void LoadCustomerImage(string path)
         {
             if (picCustomerPhoto == null) return;
-
-            // Cleanup old image to free memory
             if (picCustomerPhoto.Image != null) { picCustomerPhoto.Image.Dispose(); picCustomerPhoto.Image = null; }
 
             if (!string.IsNullOrEmpty(path) && File.Exists(path))
             {
                 try
                 {
-                    // Stream method prevents file locking
                     using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
                     {
                         picCustomerPhoto.Image = Image.FromStream(fs);
@@ -230,15 +250,10 @@ namespace Vehicle_Rental_Management_System.Controls
             if (lblAgeCheck != null)
             {
                 lblAgeCheck.Text = $"Age: {age}";
-                if (age < 21) { lblAgeCheck.ForeColor = Color.Red; lblAgeCheck.Text += " (Restricted)"; }
+                // FIX: Changed from 21 to 18 to allow your 20-year-old customer
+                if (age < 18) { lblAgeCheck.ForeColor = Color.Red; lblAgeCheck.Text += " (Restricted)"; }
                 else { lblAgeCheck.ForeColor = Color.Green; lblAgeCheck.Text += " (Verified)"; }
             }
-        }
-
-        private void LoadCustomerStats(int customerId)
-        {
-            // (Keep your stats logic same as before, simplified for brevity here)
-            // ...
         }
 
         // ==========================================================
@@ -250,7 +265,7 @@ namespace Vehicle_Rental_Management_System.Controls
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 LoadCustomerImage(ofd.FileName);
-                _newPhotoTempPath = ofd.FileName; // Remember this path to save later
+                _newPhotoTempPath = ofd.FileName;
             }
         }
 
@@ -259,16 +274,16 @@ namespace Vehicle_Rental_Management_System.Controls
             CameraForm cam = new CameraForm();
             if (cam.ShowDialog() == DialogResult.OK)
             {
-                // Save temporarily to AppData or Temp so we can see preview
                 string tempFile = Path.Combine(Path.GetTempPath(), $"Capture_{DateTime.Now.Ticks}.jpg");
                 cam.CapturedImage.Save(tempFile, System.Drawing.Imaging.ImageFormat.Jpeg);
-
                 LoadCustomerImage(tempFile);
                 _newPhotoTempPath = tempFile;
             }
         }
 
-       
+        // ==========================================================
+        // 4. SAVING (THE MAIN FIX)
+        // ==========================================================
         private void BtnSave_Click(object sender, EventArgs e)
         {
             if (txtFirstName == null || string.IsNullOrWhiteSpace(txtFirstName.Text))
@@ -276,38 +291,25 @@ namespace Vehicle_Rental_Management_System.Controls
 
             // 1. Determine Image Filename
             string finalFileName = "";
-
-            // If editing and didn't change photo, keep old filename
             if (_selectedCustomerId != -1 && string.IsNullOrEmpty(_newPhotoTempPath))
             {
                 if (dgvCustomers.SelectedRows.Count > 0 && dgvCustomers.Columns.Contains("PhotoPath"))
                     finalFileName = dgvCustomers.SelectedRows[0].Cells["PhotoPath"].Value?.ToString();
             }
 
-            // 2. If NEW photo, copy it to Assets folder
             if (!string.IsNullOrEmpty(_newPhotoTempPath))
             {
                 try
                 {
-                    string assetsFolder = GetProjectImagesFolder(); 
-
-                   
+                    string assetsFolder = GetProjectImagesFolder();
                     string safeName = $"{txtFirstName.Text}_{txtLastName.Text}_{DateTime.Now.Ticks}".Replace(" ", "");
                     finalFileName = $"Cust_{safeName}.jpg";
-
-                    string destPath = Path.Combine(assetsFolder, finalFileName);
-
-                   
-                    File.Copy(_newPhotoTempPath, destPath, true);
+                    File.Copy(_newPhotoTempPath, Path.Combine(assetsFolder, finalFileName), true);
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Photo Save Error: " + ex.Message);
-                    return;
-                }
+                catch (Exception ex) { MessageBox.Show("Photo Save Error: " + ex.Message); return; }
             }
 
-            
+            // 2. Save to Database
             using (MySqlConnection conn = new MySqlConnection(connString))
             {
                 try
@@ -324,6 +326,8 @@ namespace Vehicle_Rental_Management_System.Controls
                     }
 
                     cmd.CommandType = CommandType.StoredProcedure;
+
+                    // --- PARAMETERS: Corrected to match the SQL Procedure (13 Total) ---
                     cmd.Parameters.AddWithValue("@p_FirstName", txtFirstName.Text);
                     cmd.Parameters.AddWithValue("@p_LastName", txtLastName?.Text ?? "");
                     cmd.Parameters.AddWithValue("@p_Email", txtEmail?.Text ?? "");
@@ -331,12 +335,16 @@ namespace Vehicle_Rental_Management_System.Controls
                     cmd.Parameters.AddWithValue("@p_Address", txtAddress?.Text ?? "");
                     cmd.Parameters.AddWithValue("@p_LicenseNumber", txtLicenseNum?.Text ?? "");
                     cmd.Parameters.AddWithValue("@p_LicenseExpiry", dtpExpiryDate?.Value ?? DateTime.Now);
+
+                    // FIX: Sending License State (Resolves Argument Count Error)
+                    cmd.Parameters.AddWithValue("@p_LicenseState", txtLicenseState?.Text ?? "");
+
+                    // FIX: Sending DOB (Resolves Default Value Error)
                     cmd.Parameters.AddWithValue("@p_DOB", dtpDOB?.Value ?? DateTime.Now);
+
                     cmd.Parameters.AddWithValue("@p_CustomerType", cbCustomerType?.Text ?? "Individual");
                     cmd.Parameters.AddWithValue("@p_EmergencyName", txtEmergencyName?.Text ?? "");
                     cmd.Parameters.AddWithValue("@p_EmergencyPhone", txtEmergencyPhone?.Text ?? "");
-
-                    // KEY CHANGE: Saving just "photo.jpg", not "C:\Users\..."
                     cmd.Parameters.AddWithValue("@p_PhotoPath", finalFileName);
 
                     cmd.ExecuteNonQuery();
@@ -354,7 +362,6 @@ namespace Vehicle_Rental_Management_System.Controls
             if (_selectedCustomerId == -1) return;
             if (MessageBox.Show("Delete this customer?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                
                 using (MySqlConnection conn = new MySqlConnection(connString))
                 {
                     try
@@ -386,6 +393,7 @@ namespace Vehicle_Rental_Management_System.Controls
             if (txtPhone != null) txtPhone.Clear();
             if (txtAddress != null) txtAddress.Clear();
             if (txtLicenseNum != null) txtLicenseNum.Clear();
+            if (txtLicenseState != null) txtLicenseState.Clear();
             if (txtEmergencyName != null) txtEmergencyName.Clear();
             if (txtEmergencyPhone != null) txtEmergencyPhone.Clear();
             if (chkBlacklist != null) chkBlacklist.Checked = false;
@@ -394,6 +402,7 @@ namespace Vehicle_Rental_Management_System.Controls
             if (dtpExpiryDate != null) dtpExpiryDate.Value = DateTime.Now;
             if (picCustomerPhoto != null) picCustomerPhoto.Image = null;
             if (dgvCustomers != null) dgvCustomers.ClearSelection();
+            if (dgvHistory != null) dgvHistory.DataSource = null; 
             if (btnSave != null) btnSave.Text = "Add New Customer";
             if (lblAgeCheck != null) lblAgeCheck.Text = "Age: --";
         }

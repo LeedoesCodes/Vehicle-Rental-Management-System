@@ -14,7 +14,7 @@ namespace Vehicle_Rental_Management_System.Forms
 
         
             cbRole.Items.Clear();
-            cbRole.Items.AddRange(new string[] { "Admin", "User", "Staff" });
+            cbRole.Items.AddRange(new string[] { "Admin", "Customer", "Agent" });
 
            
             cbRole.SelectedIndex = 1;

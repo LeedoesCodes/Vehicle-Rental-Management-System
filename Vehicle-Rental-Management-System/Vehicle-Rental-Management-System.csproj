@@ -224,6 +224,7 @@
     <Compile Include="Forms\Welcome.Designer.cs">
       <DependentUpon>Welcome.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\SecurityHelper.cs" />
     <Compile Include="Models\Customers.cs" />
     <Compile Include="Models\Rentals.cs" />
     <Compile Include="Models\Reservation.cs" />

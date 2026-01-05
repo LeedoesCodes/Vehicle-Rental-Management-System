@@ -30,7 +30,7 @@
         {
             this.cbType = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtDescription = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.numFee = new System.Windows.Forms.NumericUpDown();
             this.pbEvidence = new System.Windows.Forms.PictureBox();
@@ -64,13 +64,13 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Damage Type:";
             // 
-            // textBox1
+            // txtDescription
             // 
-            this.textBox1.Location = new System.Drawing.Point(46, 125);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(281, 88);
-            this.textBox1.TabIndex = 2;
+            this.txtDescription.Location = new System.Drawing.Point(46, 125);
+            this.txtDescription.Multiline = true;
+            this.txtDescription.Name = "txtDescription";
+            this.txtDescription.Size = new System.Drawing.Size(281, 88);
+            this.txtDescription.TabIndex = 2;
             // 
             // label2
             // 
@@ -106,7 +106,7 @@
             this.btnUpload.BackColor = System.Drawing.SystemColors.Highlight;
             this.btnUpload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUpload.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnUpload.Location = new System.Drawing.Point(117, 465);
+            this.btnUpload.Location = new System.Drawing.Point(123, 465);
             this.btnUpload.Name = "btnUpload";
             this.btnUpload.Size = new System.Drawing.Size(129, 32);
             this.btnUpload.TabIndex = 6;
@@ -119,7 +119,7 @@
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSave.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnSave.Location = new System.Drawing.Point(86, 517);
+            this.btnSave.Location = new System.Drawing.Point(94, 517);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(187, 65);
             this.btnSave.TabIndex = 7;
@@ -146,7 +146,7 @@
             this.Controls.Add(this.pbEvidence);
             this.Controls.Add(this.numFee);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txtDescription);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cbType);
             this.MaximizeBox = false;
@@ -164,7 +164,7 @@
 
         private System.Windows.Forms.ComboBox cbType;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtDescription;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown numFee;
         private System.Windows.Forms.PictureBox pbEvidence;

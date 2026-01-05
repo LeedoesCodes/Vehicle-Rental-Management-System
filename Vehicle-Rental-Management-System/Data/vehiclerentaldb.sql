@@ -46,11 +46,11 @@ CREATE TABLE IF NOT EXISTS `customers` (
   KEY `idx_phone` (`Phone`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table vehiclerentaldb.customers: ~3 rows (approximately)
-INSERT INTO `customers` (`CustomerId`, `FirstName`, `LastName`, `Email`, `Phone`, `Address`, `DateOfBirth`, `LicenseNumber`, `LicenseExpiry`, `LicenseState`, `IsBlacklisted`, `CreatedDate`, `CustomerType`, `EmergencyContactName`, `EmergencyContactPhone`, `PhotoPath`, `IsFrequentRenter`) VALUES
-	(1, 'Lee', 'Singson', 'leesingeon@mail.com', '09053414599', 'San Miguel, Tagum', '2005-11-04', '16459861985', '2028-12-11', 'Philippines', 0, '2025-12-11 14:44:13', 'Individual', 'Ranel Singson', '09368656885', 'Cust_Lee_Singson_639032038903908295.jpg', b'0'),
-	(2, 'Dustin', 'Angway', 'duskun@gmail.com', '09273472872', 'Briz, Tagum', '2005-05-07', '2342356576', '2028-12-11', 'Philippines', 0, '2025-12-11 14:52:56', 'Individual', '', '', '', b'0'),
-	(3, 'Chael Gabriel', 'Lusaya', 'Chalenluz@gmail.com', '09128673869', 'Visayan Village, Tagum', '2004-08-16', '23364363', '2028-12-11', 'Philippines', 0, '2025-12-11 14:54:10', 'Individual', '', '', '', b'1');
+-- Dumping data for table vehiclerentaldb.customers: ~0 rows (approximately)
+INSERT INTO `customers` (`CustomerId`, `FirstName`, `LastName`, `Email`, `Phone`, `Address`, `DateOfBirth`, `LicenseNumber`, `LicenseExpiry`, `DOB`, `LicenseState`, `IsBlacklisted`, `CreatedDate`, `CustomerType`, `EmergencyContactName`, `EmergencyContactPhone`, `PhotoPath`) VALUES
+	(1, 'Lee', 'Singson', 'leesingeon@mail.com', '09053414599', 'San Miguel, Tagum', '2005-11-04', '16459861985', '2028-12-11', NULL, 'Philippines', 0, '2025-12-11 14:44:13', 'Individual', 'Ranel Singson', '09368656885', 'Cust_Lee_Singson_639032038903908295.jpg'),
+	(2, 'Dustin', 'Angway', 'duskun@gmail.com', '09273472872', 'Briz, Tagum', '2005-05-07', '2342356576', '2028-12-11', NULL, 'Philippines', 0, '2025-12-11 14:52:56', 'Individual', '', '', ''),
+	(3, 'Chael Gabriel', 'Lusaya', 'Chalenluz@gmail.com', '09128673869', 'Visayan Village, Tagum', '2004-08-16', '23364363', '2028-12-11', NULL, 'Philippines', 0, '2025-12-11 14:54:10', 'Individual', '', '', '');
 
 -- Dumping structure for table vehiclerentaldb.damages
 DROP TABLE IF EXISTS `damages`;
@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS `payments` (
   CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`RentalId`) REFERENCES `rentals` (`RentalId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table vehiclerentaldb.payments: ~1 rows (approximately)
+-- Dumping data for table vehiclerentaldb.payments: ~2 rows (approximately)
 INSERT INTO `payments` (`PaymentId`, `RentalId`, `Amount`, `PaymentDate`, `PaymentMethod`, `PaymentType`, `Status`, `TransactionId`, `Notes`) VALUES
 	(1, 5, 8500.00, '2026-01-05 11:32:39', 'Cash', 'Deposit', 'Completed', NULL, 'Return processed via App'),
 	(2, 6, 17900.00, '2026-01-05 15:13:15', 'Cash', 'Deposit', 'Completed', NULL, 'Return processed via App');
@@ -839,7 +839,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `Username` (`Username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table vehiclerentaldb.users: ~3 rows (approximately)
+-- Dumping data for table vehiclerentaldb.users: ~4 rows (approximately)
 INSERT INTO `users` (`UserId`, `Username`, `PasswordHash`, `FullName`, `Role`, `Email`, `Phone`, `IsActive`, `CreatedDate`) VALUES
 	(1, 'admin', '$2a$12$YourHashedPasswordHere', 'System Administrator', 'Admin', 'admin@rental.com', NULL, 1, '2025-12-11 14:19:16'),
 	(2, 'leebag', '123456', '', 'Admin', 'lee@gmail.com', '09053414599', 1, '2025-12-11 14:25:58'),

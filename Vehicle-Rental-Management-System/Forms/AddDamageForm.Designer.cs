@@ -112,6 +112,7 @@
             this.btnUpload.TabIndex = 6;
             this.btnUpload.Text = "Image Upload";
             this.btnUpload.UseVisualStyleBackColor = false;
+            this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
             // 
             // btnSave
             // 
@@ -125,6 +126,7 @@
             this.btnSave.TabIndex = 7;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = false;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // label3
             // 

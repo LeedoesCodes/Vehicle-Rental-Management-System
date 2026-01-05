@@ -149,7 +149,7 @@ namespace Vehicle_Rental_Management_System.Forms
                 {
                     conn.Open();
 
-                    // A. Save the Main Return (Updates Rental & Vehicle Status)
+      
                     using (MySqlCommand cmd = new MySqlCommand("sp_ProcessReturn", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
@@ -164,12 +164,12 @@ namespace Vehicle_Rental_Management_System.Forms
                         cmd.ExecuteNonQuery();
                     }
 
-                    // B. LOOP: Save the individual Damage Reports
                     string assetsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../Assets/Images/Damages");
                     if (!Directory.Exists(assetsPath)) Directory.CreateDirectory(assetsPath);
 
                     foreach (var report in _damageReports)
                     {
+                      
                         string finalImageName = "";
                         if (!string.IsNullOrEmpty(report.TempImagePath))
                         {
@@ -177,17 +177,18 @@ namespace Vehicle_Rental_Management_System.Forms
                             File.Copy(report.TempImagePath, Path.Combine(assetsPath, finalImageName));
                         }
 
-                        // Insert directly into the new table
-                        string sql = "INSERT INTO RentalDamages (RentalId, DamageType, Description, DamageFee, EvidencePhotoPath, CreatedDate) " +
-                                     "VALUES (@rId, @type, @desc, @fee, @img, NOW())";
-
-                        using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                        
+                        using (MySqlCommand cmd = new MySqlCommand("sp_AddDamage", conn))
                         {
-                            cmd.Parameters.AddWithValue("@rId", _rentalId);
-                            cmd.Parameters.AddWithValue("@type", report.Type);
-                            cmd.Parameters.AddWithValue("@desc", report.Description);
-                            cmd.Parameters.AddWithValue("@fee", report.Fee);
-                            cmd.Parameters.AddWithValue("@img", finalImageName);
+                            cmd.CommandType = CommandType.StoredProcedure;
+
+                            
+                            cmd.Parameters.AddWithValue("_rental_id", _rentalId);
+                            cmd.Parameters.AddWithValue("_damage_type", report.Type);
+                            cmd.Parameters.AddWithValue("_description", report.Description);
+                            cmd.Parameters.AddWithValue("_fee", report.Fee);
+                            cmd.Parameters.AddWithValue("_image_path", finalImageName);
+
                             cmd.ExecuteNonQuery();
                         }
                     }
@@ -196,7 +197,10 @@ namespace Vehicle_Rental_Management_System.Forms
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }
-                catch (Exception ex) { MessageBox.Show("Save Error: " + ex.Message); }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Save Error: " + ex.Message);
+                }
             }
         }
 

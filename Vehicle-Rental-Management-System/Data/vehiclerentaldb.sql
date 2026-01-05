@@ -21,7 +21,6 @@ CREATE DATABASE IF NOT EXISTS `vehiclerentaldb` /*!40100 DEFAULT CHARACTER SET u
 USE `vehiclerentaldb`;
 
 -- Dumping structure for table vehiclerentaldb.customers
-DROP TABLE IF EXISTS `customers`;
 CREATE TABLE IF NOT EXISTS `customers` (
   `CustomerId` int NOT NULL AUTO_INCREMENT,
   `FirstName` varchar(50) NOT NULL,
@@ -53,7 +52,6 @@ INSERT INTO `customers` (`CustomerId`, `FirstName`, `LastName`, `Email`, `Phone`
 	(3, 'Chael Gabriel', 'Lusaya', 'Chalenluz@gmail.com', '09128673869', 'Visayan Village, Tagum', '2004-08-16', '23364363', '2028-12-11', NULL, 'Philippines', 0, '2025-12-11 14:54:10', 'Individual', '', '', '');
 
 -- Dumping structure for table vehiclerentaldb.damages
-DROP TABLE IF EXISTS `damages`;
 CREATE TABLE IF NOT EXISTS `damages` (
   `DamageId` int NOT NULL AUTO_INCREMENT,
   `RentalId` int NOT NULL,
@@ -67,9 +65,10 @@ CREATE TABLE IF NOT EXISTS `damages` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table vehiclerentaldb.damages: ~0 rows (approximately)
+INSERT INTO `damages` (`DamageId`, `RentalId`, `DamageType`, `Description`, `RepairCost`, `EvidencePhoto`, `ReportedDate`, `IsPaid`) VALUES
+	(1, 11, 'Dent', 'door dent', 1000.00, '', '2026-01-05 17:21:02', 0);
 
 -- Dumping structure for table vehiclerentaldb.maintenancerecords
-DROP TABLE IF EXISTS `maintenancerecords`;
 CREATE TABLE IF NOT EXISTS `maintenancerecords` (
   `MaintenanceId` int NOT NULL AUTO_INCREMENT,
   `VehicleId` int NOT NULL,
@@ -87,7 +86,6 @@ CREATE TABLE IF NOT EXISTS `maintenancerecords` (
 -- Dumping data for table vehiclerentaldb.maintenancerecords: ~0 rows (approximately)
 
 -- Dumping structure for table vehiclerentaldb.payments
-DROP TABLE IF EXISTS `payments`;
 CREATE TABLE IF NOT EXISTS `payments` (
   `PaymentId` int NOT NULL AUTO_INCREMENT,
   `RentalId` int NOT NULL,
@@ -106,10 +104,16 @@ CREATE TABLE IF NOT EXISTS `payments` (
 -- Dumping data for table vehiclerentaldb.payments: ~2 rows (approximately)
 INSERT INTO `payments` (`PaymentId`, `RentalId`, `Amount`, `PaymentDate`, `PaymentMethod`, `PaymentType`, `Status`, `TransactionId`, `Notes`) VALUES
 	(1, 5, 8500.00, '2026-01-05 11:32:39', 'Cash', 'Deposit', 'Completed', NULL, 'Return processed via App'),
-	(2, 6, 17900.00, '2026-01-05 15:13:15', 'Cash', 'Deposit', 'Completed', NULL, 'Return processed via App');
+	(2, 6, 17900.00, '2026-01-05 15:13:15', 'Cash', 'Deposit', 'Completed', NULL, 'Return processed via App'),
+	(3, 7, 23250.00, '2026-01-05 17:04:27', 'Cash', 'Deposit', 'Completed', NULL, 'App Processed'),
+	(4, 7, 23250.00, '2026-01-05 17:05:13', 'Cash', 'Deposit', 'Completed', NULL, 'App Processed'),
+	(5, 7, 23250.00, '2026-01-05 17:05:32', 'Cash', 'Deposit', 'Completed', NULL, 'App Processed'),
+	(6, 8, 3000.00, '2026-01-05 17:07:07', 'Cash', 'Deposit', 'Completed', NULL, 'App Processed'),
+	(7, 9, 2200.00, '2026-01-05 17:14:31', 'Cash', 'Deposit', 'Completed', NULL, 'App Processed'),
+	(8, 10, 4900.00, '2026-01-05 17:17:16', 'Cash', 'Deposit', 'Completed', NULL, 'App Processed'),
+	(9, 11, 1045.00, '2026-01-05 17:21:02', 'Cash', 'Deposit', 'Completed', NULL, 'App Processed');
 
 -- Dumping structure for table vehiclerentaldb.rentals
-DROP TABLE IF EXISTS `rentals`;
 CREATE TABLE IF NOT EXISTS `rentals` (
   `RentalId` int NOT NULL AUTO_INCREMENT,
   `VehicleId` int DEFAULT NULL,
@@ -143,11 +147,13 @@ INSERT INTO `rentals` (`RentalId`, `VehicleId`, `CustomerId`, `ReservationId`, `
 	(4, NULL, NULL, 5, '2026-01-02 14:34:35', '2026-01-04 14:34:35', NULL, 12000.00, NULL, 'Full', NULL, NULL, NULL, 'Ongoing', 1, NULL),
 	(5, 4, 2, 1, '2026-01-02 15:37:13', '2026-01-03 15:37:13', '2026-01-05 11:32:16', 15000.00, 15000.00, 'Full', '1/4', NULL, ' (Damage Fee Detected)', 'Completed', 1, 8500.00),
 	(6, 9, 1, NULL, '2026-01-02 16:06:13', '2026-01-03 16:06:13', '2026-01-05 15:11:28', 28341.00, 28501.00, 'Full', '1/4', '', ' (Damage Fee Detected)', 'Completed', 1, 17900.00),
-	(7, 8, 3, NULL, '2025-12-31 14:56:15', '2026-01-01 14:56:16', NULL, 35000.00, NULL, 'Full', NULL, '', NULL, 'Ongoing', 1, 4500.00),
-	(8, 5, 1, NULL, '2026-01-05 10:44:48', '2026-01-06 10:44:48', NULL, 22000.00, NULL, 'Full', NULL, '', NULL, 'Ongoing', 1, 1500.00);
+	(7, 8, 3, NULL, '2025-12-31 14:56:15', '2026-01-01 14:56:16', '2026-01-05 17:01:03', 35000.00, 35000.00, 'Full', 'Empty', '', ' [Damage Incidents Recorded: 3]', 'Completed', 1, 23250.00),
+	(8, 5, 1, NULL, '2026-01-05 10:44:48', '2026-01-06 10:44:48', '2026-01-05 17:06:33', 22000.00, 22000.00, 'Full', '1/4', '', ' [Damage Incidents Recorded: 1]', 'Completed', 1, 3000.00),
+	(9, 4, 1, NULL, '2026-01-05 17:13:49', '2026-01-06 17:13:49', '2026-01-05 17:14:00', 15000.00, 15000.00, 'Full', 'Empty', '', ' [Damage Incidents Recorded: 1]', 'Completed', 1, 2200.00),
+	(10, 8, 3, NULL, '2026-01-05 17:16:54', '2026-01-06 17:16:54', '2026-01-05 17:17:04', 35000.00, 35000.00, 'Full', 'Empty', '', ' [Damage Incidents Recorded: 1]', 'Completed', 1, 4900.00),
+	(11, 1, 1, NULL, '2026-01-05 17:19:50', '2026-01-06 17:19:50', '2026-01-05 17:20:01', 0.00, 0.00, 'Full', 'Empty', '', ' [Damage Incidents Recorded: 1]', 'Completed', 1, 1045.00);
 
 -- Dumping structure for table vehiclerentaldb.reservations
-DROP TABLE IF EXISTS `reservations`;
 CREATE TABLE IF NOT EXISTS `reservations` (
   `ReservationId` int NOT NULL AUTO_INCREMENT,
   `CustomerId` int NOT NULL,
@@ -177,7 +183,6 @@ INSERT INTO `reservations` (`ReservationId`, `CustomerId`, `VehicleId`, `StartDa
 	(3, 3, 5, '2026-01-02 16:06:27', '2026-01-03 16:06:27', 'Confirmed', 1500.00, '2026-01-02 16:06:36', 1, '');
 
 -- Dumping structure for procedure vehiclerentaldb.sp_AddCustomer
-DROP PROCEDURE IF EXISTS `sp_AddCustomer`;
 DELIMITER //
 CREATE PROCEDURE `sp_AddCustomer`(
     IN p_FirstName VARCHAR(100),
@@ -233,7 +238,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_AddReservation
-DROP PROCEDURE IF EXISTS `sp_AddReservation`;
 DELIMITER //
 CREATE PROCEDURE `sp_AddReservation`(
     IN p_CustomerId INT,
@@ -256,7 +260,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_AddVehicle
-DROP PROCEDURE IF EXISTS `sp_AddVehicle`;
 DELIMITER //
 CREATE PROCEDURE `sp_AddVehicle`(
     IN p_Make VARCHAR(50), IN p_Model VARCHAR(50), IN p_Year INT, 
@@ -286,7 +289,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_CancelReservation
-DROP PROCEDURE IF EXISTS `sp_CancelReservation`;
 DELIMITER //
 CREATE PROCEDURE `sp_CancelReservation`(IN p_ReservationId INT)
 BEGIN
@@ -297,7 +299,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_CreateRental
-DROP PROCEDURE IF EXISTS `sp_CreateRental`;
 DELIMITER //
 CREATE PROCEDURE `sp_CreateRental`(
     IN p_VehicleId INT,
@@ -346,7 +347,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_DeleteCustomer
-DROP PROCEDURE IF EXISTS `sp_DeleteCustomer`;
 DELIMITER //
 CREATE PROCEDURE `sp_DeleteCustomer`(IN p_CustomerId INT)
 BEGIN
@@ -355,7 +355,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_DeleteVehicle
-DROP PROCEDURE IF EXISTS `sp_DeleteVehicle`;
 DELIMITER //
 CREATE PROCEDURE `sp_DeleteVehicle`(
     IN p_VehicleId INT
@@ -378,7 +377,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_GetAllCategories
-DROP PROCEDURE IF EXISTS `sp_GetAllCategories`;
 DELIMITER //
 CREATE PROCEDURE `sp_GetAllCategories`()
 BEGIN
@@ -390,7 +388,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_GetAllCustomers
-DROP PROCEDURE IF EXISTS `sp_GetAllCustomers`;
 DELIMITER //
 CREATE PROCEDURE `sp_GetAllCustomers`()
 BEGIN
@@ -399,7 +396,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_GetAllRentals
-DROP PROCEDURE IF EXISTS `sp_GetAllRentals`;
 DELIMITER //
 CREATE PROCEDURE `sp_GetAllRentals`()
 BEGIN
@@ -426,7 +422,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_GetAllReservations
-DROP PROCEDURE IF EXISTS `sp_GetAllReservations`;
 DELIMITER //
 CREATE PROCEDURE `sp_GetAllReservations`()
 BEGIN
@@ -451,7 +446,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_GetAllVehicleCategories
-DROP PROCEDURE IF EXISTS `sp_GetAllVehicleCategories`;
 DELIMITER //
 CREATE PROCEDURE `sp_GetAllVehicleCategories`()
 BEGIN
@@ -466,7 +460,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_GetAllVehicles
-DROP PROCEDURE IF EXISTS `sp_GetAllVehicles`;
 DELIMITER //
 CREATE PROCEDURE `sp_GetAllVehicles`()
 BEGIN
@@ -483,7 +476,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_GetCustomerStats
-DROP PROCEDURE IF EXISTS `sp_GetCustomerStats`;
 DELIMITER //
 CREATE PROCEDURE `sp_GetCustomerStats`(IN p_CustomerId INT)
 BEGIN
@@ -495,7 +487,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_GetDashboardOverdue
-DROP PROCEDURE IF EXISTS `sp_GetDashboardOverdue`;
 DELIMITER //
 CREATE PROCEDURE `sp_GetDashboardOverdue`()
 BEGIN
@@ -517,7 +508,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_GetDashboardStats
-DROP PROCEDURE IF EXISTS `sp_GetDashboardStats`;
 DELIMITER //
 CREATE PROCEDURE `sp_GetDashboardStats`()
 BEGIN
@@ -548,7 +538,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_GetMonthlyRevenue
-DROP PROCEDURE IF EXISTS `sp_GetMonthlyRevenue`;
 DELIMITER //
 CREATE PROCEDURE `sp_GetMonthlyRevenue`()
 BEGIN
@@ -564,7 +553,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_GetRecentCustomers
-DROP PROCEDURE IF EXISTS `sp_GetRecentCustomers`;
 DELIMITER //
 CREATE PROCEDURE `sp_GetRecentCustomers`()
 BEGIN
@@ -574,7 +562,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_GetVehicleById
-DROP PROCEDURE IF EXISTS `sp_GetVehicleById`;
 DELIMITER //
 CREATE PROCEDURE `sp_GetVehicleById`(IN p_VehicleId INT)
 BEGIN
@@ -583,7 +570,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_GetVehicleDetails
-DROP PROCEDURE IF EXISTS `sp_GetVehicleDetails`;
 DELIMITER //
 CREATE PROCEDURE `sp_GetVehicleDetails`(IN p_VehicleId INT)
 BEGIN
@@ -617,7 +603,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_RegisterUser
-DROP PROCEDURE IF EXISTS `sp_RegisterUser`;
 DELIMITER //
 CREATE PROCEDURE `sp_RegisterUser`(
     IN p_Username VARCHAR(50), 
@@ -639,7 +624,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_RetireVehicle
-DROP PROCEDURE IF EXISTS `sp_RetireVehicle`;
 DELIMITER //
 CREATE PROCEDURE `sp_RetireVehicle`(IN p_VehicleId INT)
 BEGIN
@@ -655,7 +639,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_ReturnVehicle
-DROP PROCEDURE IF EXISTS `sp_ReturnVehicle`;
 DELIMITER //
 CREATE PROCEDURE `sp_ReturnVehicle`(
     IN p_RentalId INT,
@@ -700,7 +683,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_SearchCustomers
-DROP PROCEDURE IF EXISTS `sp_SearchCustomers`;
 DELIMITER //
 CREATE PROCEDURE `sp_SearchCustomers`(IN p_SearchTerm VARCHAR(100))
 BEGIN
@@ -714,7 +696,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_UpdateCustomer
-DROP PROCEDURE IF EXISTS `sp_UpdateCustomer`;
 DELIMITER //
 CREATE PROCEDURE `sp_UpdateCustomer`(
     IN p_CustomerId INT,
@@ -755,7 +736,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_UpdateVehicle
-DROP PROCEDURE IF EXISTS `sp_UpdateVehicle`;
 DELIMITER //
 CREATE PROCEDURE `sp_UpdateVehicle`(
     IN p_VehicleId INT,
@@ -785,7 +765,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure vehiclerentaldb.sp_UpdateVehicleWithImage
-DROP PROCEDURE IF EXISTS `sp_UpdateVehicleWithImage`;
 DELIMITER //
 CREATE PROCEDURE `sp_UpdateVehicleWithImage`(
     IN p_VehicleId INT,
@@ -824,7 +803,6 @@ END//
 DELIMITER ;
 
 -- Dumping structure for table vehiclerentaldb.users
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `UserId` int NOT NULL AUTO_INCREMENT,
   `Username` varchar(50) NOT NULL,
@@ -847,7 +825,6 @@ INSERT INTO `users` (`UserId`, `Username`, `PasswordHash`, `FullName`, `Role`, `
 	(4, 'lee', 'MtViIulINroPTFLlzhXjrsOxoIe4ouvUj6RgrNmzJMK9LN9zvnkKN+/GwRj9pp68', 'New User', 'Admin', 'lee@gmail.com', '09053414599', 1, '2026-01-05 14:00:03');
 
 -- Dumping structure for table vehiclerentaldb.vehiclecategories
-DROP TABLE IF EXISTS `vehiclecategories`;
 CREATE TABLE IF NOT EXISTS `vehiclecategories` (
   `CategoryId` int NOT NULL AUTO_INCREMENT,
   `CategoryName` varchar(50) NOT NULL,
@@ -866,7 +843,6 @@ INSERT INTO `vehiclecategories` (`CategoryId`, `CategoryName`, `BaseDailyRate`, 
 	(5, 'Van/Minibus', 90.00, 'Passenger or cargo van');
 
 -- Dumping structure for table vehiclerentaldb.vehicles
-DROP TABLE IF EXISTS `vehicles`;
 CREATE TABLE IF NOT EXISTS `vehicles` (
   `VehicleId` int NOT NULL AUTO_INCREMENT,
   `Make` varchar(50) NOT NULL,
@@ -900,10 +876,10 @@ INSERT INTO `vehicles` (`VehicleId`, `Make`, `Model`, `Year`, `Color`, `LicenseP
 	(2, 'Honda', 'Civic', 2023, 'Maroon', 'DEF456', '2HGCM82633B654321', 2, 'Automatic', 'Gasoline', 5, 456678.00, 'Available', 48.00, NULL, NULL, '2025-12-11 14:19:16', 'Full'),
 	(3, 'Ford', 'Explorer', 2022, 'Black', 'GHI789', '3FCM82633C789012', 3, 'Automatic', 'Gasoline', 5, 3453.00, 'Available', 65.00, 'C:\\Users\\lee\\Desktop\\Vehicle-Rental-Management-System\\Vehicle-Rental-Management-System\\bin\\Debug\\VehicleImages\\vehicle_3_20251230010954.jpg', NULL, '2025-12-11 14:19:16', 'Full'),
 	(4, 'Toyota', 'Vios', 2023, 'Silver', 'NCA-1023', 'TV1234567890', 1, 'Automatic', 'Gasoline', 5, 15000.00, 'Available', 2000.00, 'C:\\Users\\lee\\Desktop\\Vehicle-Rental-Management-System\\Vehicle-Rental-Management-System\\bin\\Debug\\VehicleImages\\vehicle_4_20260103133416.jpg', NULL, '2025-12-11 14:45:06', 'Full'),
-	(5, 'Toyota', 'Wigo', 2022, 'Red', 'DAE-5521', 'TW8877665544', 1, 'Automatic', 'Gasoline', 5, 22000.00, 'Rented', 1500.00, NULL, NULL, '2025-12-11 14:45:06', 'Full'),
+	(5, 'Toyota', 'Wigo', 2022, 'Red', 'DAE-5521', 'TW8877665544', 1, 'Automatic', 'Gasoline', 5, 22000.00, 'Available', 1500.00, NULL, NULL, '2025-12-11 14:45:06', 'Full'),
 	(6, 'Honda', 'City', 2024, 'White', 'ABC-9988', 'HC1122334455', 1, 'Automatic', 'Gasoline', 5, 5000.00, 'Available', 2500.00, NULL, NULL, '2025-12-11 14:45:06', 'Full'),
 	(7, 'Ford', 'Territory', 2023, 'Blue', 'FEF-3321', 'FT9988776655', 2, 'Automatic', 'Gasoline', 5, 12000.00, 'Rented', 3000.00, NULL, NULL, '2025-12-11 14:45:06', 'Full'),
-	(8, 'Toyota', 'Fortuner', 2021, 'Black', 'NBV-1122', 'TF5544332211', 3, 'Automatic', 'Diesel', 7, 35000.00, 'Rented', 4500.00, NULL, NULL, '2025-12-11 14:45:06', 'Full'),
+	(8, 'Toyota', 'Fortuner', 2021, 'Black', 'NBV-1122', 'TF5544332211', 3, 'Automatic', 'Diesel', 7, 35000.00, 'Available', 4500.00, NULL, NULL, '2025-12-11 14:45:06', 'Full'),
 	(9, 'Mitsubishi', 'Montero', 2022, 'Gray', 'MMP-7744', 'MM6677889900', 3, 'Automatic', 'Diesel', 7, 28501.00, 'Available', 4200.00, 'C:\\Users\\lee\\Desktop\\Vehicle-Rental-Management-System\\Vehicle-Rental-Management-System\\bin\\Debug\\VehicleImages\\vehicle_9_20260103125119.jpg', NULL, '2025-12-11 14:45:06', 'Full'),
 	(10, 'Toyota', 'HiAce', 2019, 'White', 'TXT-5511', 'TH1122334400', 3, 'Manual', 'Diesel', 15, 60000.00, 'Available', 5000.00, NULL, NULL, '2025-12-11 14:45:06', 'Full'),
 	(11, 'Nissan', 'Urvan', 2020, 'Silver', 'NUV-8822', 'NU9988776611', 3, 'Manual', 'Diesel', 15, 45000.00, 'Available', 4800.00, NULL, NULL, '2025-12-11 14:45:06', 'Full'),
@@ -913,7 +889,6 @@ INSERT INTO `vehicles` (`VehicleId`, `Make`, `Model`, `Year`, `Color`, `LicenseP
 	(32, 'Ford', 'Ranger', 2024, 'Orange', '325 NSD', '4237GBLWVFEF42', 4, 'Automatic', 'Gasoline', 5, 245.00, 'Rented', 23546.00, 'C:\\Users\\lee\\Desktop\\Vehicle-Rental-Management-System\\Vehicle-Rental-Management-System\\bin\\Debug\\VehicleImages\\vehicle_32_20251230010528.jpg', NULL, '2025-12-30 01:05:28', 'Full');
 
 -- Dumping structure for table vehiclerentaldb.vehicle_images
-DROP TABLE IF EXISTS `vehicle_images`;
 CREATE TABLE IF NOT EXISTS `vehicle_images` (
   `ImageId` int NOT NULL AUTO_INCREMENT,
   `VehicleId` int NOT NULL,

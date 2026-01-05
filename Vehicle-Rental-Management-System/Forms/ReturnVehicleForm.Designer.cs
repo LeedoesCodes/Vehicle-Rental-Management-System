@@ -48,7 +48,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.numDamages = new System.Windows.Forms.NumericUpDown();
             this.dgvDamages = new System.Windows.Forms.DataGridView();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnAddDamage = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numLateFee)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDamages)).BeginInit();
@@ -273,30 +273,33 @@
             this.dgvDamages.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDamages.Location = new System.Drawing.Point(516, 96);
             this.dgvDamages.Name = "dgvDamages";
+            this.dgvDamages.RowHeadersVisible = false;
             this.dgvDamages.RowHeadersWidth = 51;
             this.dgvDamages.RowTemplate.Height = 24;
-            this.dgvDamages.Size = new System.Drawing.Size(475, 430);
+            this.dgvDamages.Size = new System.Drawing.Size(561, 430);
             this.dgvDamages.TabIndex = 14;
             // 
-            // button1
+            // btnAddDamage
             // 
-            this.button1.BackColor = System.Drawing.Color.Blue;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(516, 25);
-            this.button1.Margin = new System.Windows.Forms.Padding(4);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(227, 55);
-            this.button1.TabIndex = 15;
-            this.button1.Text = "Complete Return";
-            this.button1.UseVisualStyleBackColor = false;
+            this.btnAddDamage.BackColor = System.Drawing.Color.IndianRed;
+            this.btnAddDamage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddDamage.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAddDamage.ForeColor = System.Drawing.Color.White;
+            this.btnAddDamage.Location = new System.Drawing.Point(516, 25);
+            this.btnAddDamage.Margin = new System.Windows.Forms.Padding(4);
+            this.btnAddDamage.Name = "btnAddDamage";
+            this.btnAddDamage.Size = new System.Drawing.Size(174, 55);
+            this.btnAddDamage.TabIndex = 15;
+            this.btnAddDamage.Text = "➕ Add Damage";
+            this.btnAddDamage.UseVisualStyleBackColor = false;
+            this.btnAddDamage.Click += new System.EventHandler(this.BtnAddDamage_Click);
             // 
             // ReturnVehicleForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1019, 703);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(1127, 703);
+            this.Controls.Add(this.btnAddDamage);
             this.Controls.Add(this.dgvDamages);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnCancels);
@@ -352,6 +355,6 @@
         private System.Windows.Forms.Label lblTotal;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.DataGridView dgvDamages;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnAddDamage;
     }
 }

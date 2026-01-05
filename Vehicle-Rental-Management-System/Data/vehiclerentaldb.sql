@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `customers` (
   KEY `idx_phone` (`Phone`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table vehiclerentaldb.customers: ~0 rows (approximately)
+-- Dumping data for table vehiclerentaldb.customers: ~3 rows (approximately)
 INSERT INTO `customers` (`CustomerId`, `FirstName`, `LastName`, `Email`, `Phone`, `Address`, `DateOfBirth`, `LicenseNumber`, `LicenseExpiry`, `DOB`, `LicenseState`, `IsBlacklisted`, `CreatedDate`, `CustomerType`, `EmergencyContactName`, `EmergencyContactPhone`, `PhotoPath`) VALUES
 	(1, 'Lee', 'Singson', 'leesingeon@mail.com', '09053414599', 'San Miguel, Tagum', '2005-11-04', '16459861985', '2028-12-11', NULL, 'Philippines', 0, '2025-12-11 14:44:13', 'Individual', 'Ranel Singson', '09368656885', 'Cust_Lee_Singson_639032038903908295.jpg'),
 	(2, 'Dustin', 'Angway', 'duskun@gmail.com', '09273472872', 'Briz, Tagum', '2005-05-07', '2342356576', '2028-12-11', NULL, 'Philippines', 0, '2025-12-11 14:52:56', 'Individual', '', '', ''),

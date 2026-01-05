@@ -137,12 +137,27 @@ namespace Vehicle_Rental_Management_System.Forms
 
         private void SaveReturnTransaction(decimal finalOdometer)
         {
-            // Recalculate total safely to ensure accuracy
+            // 1. Calculate Totals
             TimeSpan duration = dtReturns.Value.Date - _startDate.Date;
             int days = (duration.Days < 1) ? 1 : duration.Days;
-            decimal totalAmount = (days * _dailyRate) +
-                                  (numDamages != null ? numDamages.Value : 0) +
-                                  (numLateFee != null ? numLateFee.Value : 0);
+
+            // Safety check for null controls
+            decimal damageFee = (numDamages != null) ? numDamages.Value : 0;
+            decimal lateFee = (numLateFee != null) ? numLateFee.Value : 0;
+
+            decimal totalAmount = (days * _dailyRate) + damageFee + lateFee;
+
+            // 2. ➤ AUTO-FLAG DAMAGES 
+            // This fixes your issue: If money is charged, force the word "Damage" into the text
+            string conditionText = txtConditions.Text;
+            if (damageFee > 0)
+            {
+                // Only add if it's not already typed
+                if (!conditionText.ToLower().Contains("damage"))
+                {
+                    conditionText += " [Damage/Scratch Fee Charged]";
+                }
+            }
 
             using (MySqlConnection conn = new MySqlConnection(connString))
             {
@@ -153,26 +168,22 @@ namespace Vehicle_Rental_Management_System.Forms
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
 
-                        // PARAMETERS MATCHING YOUR NEW SQL PROCEDURE EXACTLY
                         cmd.Parameters.AddWithValue("@p_RentalId", _rentalId);
                         cmd.Parameters.AddWithValue("@p_VehicleId", _vehicleId);
-
-                        // FIX: Matches 'p_ActualReturnDate' in SQL
                         cmd.Parameters.AddWithValue("@p_ActualReturnDate", dtReturns.Value);
-
                         cmd.Parameters.AddWithValue("@p_OdometerEnd", finalOdometer);
                         cmd.Parameters.AddWithValue("@p_FuelLevelEnd", cbFuels.SelectedItem?.ToString() ?? "Full");
 
-                        // FIX: Matches 'p_FinalCondition' in SQL
-                        cmd.Parameters.AddWithValue("@p_FinalCondition", txtConditions.Text);
+                        // ➤ SEND THE MODIFIED TEXT
+                        cmd.Parameters.AddWithValue("@p_FinalCondition", conditionText);
 
                         cmd.Parameters.AddWithValue("@p_TotalAmount", totalAmount);
-                        cmd.Parameters.AddWithValue("@p_Notes", "Return processed via App");
+                        cmd.Parameters.AddWithValue("@p_Notes", $"Return Processed. Damage: {damageFee:C2}");
 
                         cmd.ExecuteNonQuery();
                     }
 
-                    MessageBox.Show("Vehicle Returned & Payment Saved!", "Success");
+                    MessageBox.Show("Vehicle Returned & Damage Recorded!", "Success");
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }

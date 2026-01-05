@@ -146,6 +146,12 @@
       <DependentUpon>VehiclesView.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\DatabaseHelper.cs" />
+    <Compile Include="Forms\AddDamageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AddDamageForm.Designer.cs">
+      <DependentUpon>AddDamageForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\AddReservationForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -252,6 +258,9 @@
     <EmbeddedResource Include="Controls\VehiclesView.resx">
       <DependentUpon>VehiclesView.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AddDamageForm.resx">
+      <DependentUpon>AddDamageForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\AddVehicleForm.resx">
       <DependentUpon>AddVehicleForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -305,6 +314,7 @@
   <ItemGroup>
     <Content Include="Assets\Images\Customers\placeholder.txt" />
     <Content Include="Assets\Images\Vehicles\placeholder.txt" />
+    <Content Include="Data\vehiclerentaldb.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

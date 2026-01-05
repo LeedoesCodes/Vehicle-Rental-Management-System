@@ -20,22 +20,18 @@ namespace Vehicle_Rental_Management_System.Controls
         {
             InitializeComponent();
 
-            // 1. Grid Events
             if (dgvCustomers != null)
             {
                 dgvCustomers.SelectionChanged -= DgvCustomers_SelectionChanged;
                 dgvCustomers.SelectionChanged += DgvCustomers_SelectionChanged;
             }
 
-            // 2. Photo Buttons
             if (btnUploadPhoto != null) btnUploadPhoto.Click += BtnUploadPhoto_Click;
             if (btnCamera != null) btnCamera.Click += BtnCamera_Click;
 
-            // 3. Age Calculation
             if (dtpDOB != null)
                 dtpDOB.ValueChanged += (s, e) => CalculateAge(dtpDOB.Value);
 
-            // 4. Search
             if (txtSearch != null)
             {
                 txtSearch.TextChanged += (s, e) => PerformSearch();
@@ -56,21 +52,16 @@ namespace Vehicle_Rental_Management_System.Controls
             }
         }
 
-        // ==========================================================
-        // 🛠️ HELPER: Get the 'Assets' Folder
-        // ==========================================================
         private string GetProjectImagesFolder()
         {
-            // Navigates up from bin/Debug to the project root
             string projectPath = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.FullName;
             string targetFolder = Path.Combine(projectPath, "Assets", "Images", "Customers");
-
             if (!Directory.Exists(targetFolder)) Directory.CreateDirectory(targetFolder);
             return targetFolder;
         }
 
         // ==========================================================
-        // 1. DATA LOADING & SEARCH
+        // 1. DATA LOADING
         // ==========================================================
         private void PerformSearch()
         {
@@ -124,9 +115,10 @@ namespace Vehicle_Rental_Management_System.Controls
         private void FormatGrid()
         {
             if (dgvCustomers == null) return;
+            // Hide internal columns from the grid view
             string[] hide = { "CustomerId", "LicenseNumber", "LicenseExpiry", "DOB", "Address", "LicenseState",
                               "CustomerType", "EmergencyContactName", "EmergencyContactPhone",
-                              "IsBlacklisted", "CreatedDate", "PhotoPath", "DateOfBirth" };
+                              "IsBlacklisted", "IsFrequentRenter", "CreatedDate", "PhotoPath", "DateOfBirth" };
 
             foreach (var col in hide)
                 if (dgvCustomers.Columns.Contains(col)) dgvCustomers.Columns[col].Visible = false;
@@ -135,7 +127,7 @@ namespace Vehicle_Rental_Management_System.Controls
         }
 
         // ==========================================================
-        // 2. SELECTION & IMAGE LOADING
+        // 2. SELECTION (LOADING DATA INTO FORM)
         // ==========================================================
         private void DgvCustomers_SelectionChanged(object sender, EventArgs e)
         {
@@ -155,12 +147,10 @@ namespace Vehicle_Rental_Management_System.Controls
                 if (txtEmergencyPhone != null) txtEmergencyPhone.Text = row.Cells["EmergencyContactPhone"].Value?.ToString();
                 if (txtLicenseNum != null) txtLicenseNum.Text = row.Cells["LicenseNumber"].Value?.ToString();
 
-                // NEW: Load State
                 if (txtLicenseState != null && dgvCustomers.Columns.Contains("LicenseState") && row.Cells["LicenseState"].Value != DBNull.Value)
                     txtLicenseState.Text = row.Cells["LicenseState"].Value.ToString();
 
                 // --- Dates ---
-                // Handle different potential column names for DOB
                 string dobCol = dgvCustomers.Columns.Contains("DateOfBirth") ? "DateOfBirth" : "DOB";
                 if (dgvCustomers.Columns.Contains(dobCol) && row.Cells[dobCol].Value != DBNull.Value && dtpDOB != null)
                     dtpDOB.Value = Convert.ToDateTime(row.Cells[dobCol].Value);
@@ -168,36 +158,73 @@ namespace Vehicle_Rental_Management_System.Controls
                 if (dtpExpiryDate != null && row.Cells["LicenseExpiry"].Value != DBNull.Value)
                     dtpExpiryDate.Value = Convert.ToDateTime(row.Cells["LicenseExpiry"].Value);
 
-                // --- Status ---
+                // --- Status Checkboxes ---
                 if (cbCustomerType != null) cbCustomerType.Text = row.Cells["CustomerType"].Value?.ToString();
-                if (chkBlacklist != null) chkBlacklist.Checked = Convert.ToBoolean(row.Cells["IsBlacklisted"].Value);
 
-                // --- 📸 SMART IMAGE LOADING ---
+                if (chkBlacklist != null && dgvCustomers.Columns.Contains("IsBlacklisted"))
+                    chkBlacklist.Checked = Convert.ToBoolean(row.Cells["IsBlacklisted"].Value);
+
+                // ➤ FIX: LOAD LOYALTY STATUS
+                if (chkLoyalty != null)
+                {
+                    if (dgvCustomers.Columns.Contains("IsFrequentRenter") && row.Cells["IsFrequentRenter"].Value != DBNull.Value)
+                        chkLoyalty.Checked = Convert.ToBoolean(row.Cells["IsFrequentRenter"].Value);
+                    else
+                        chkLoyalty.Checked = false;
+                }
+
+                // --- Image & History ---
                 string fileName = "";
                 if (dgvCustomers.Columns.Contains("PhotoPath") && row.Cells["PhotoPath"].Value != DBNull.Value)
-                {
                     fileName = row.Cells["PhotoPath"].Value.ToString();
-                }
 
-                if (!string.IsNullOrEmpty(fileName))
-                {
-                    string fullPath = Path.Combine(GetProjectImagesFolder(), fileName);
-                    LoadCustomerImage(fullPath);
-                }
-                else LoadCustomerImage(null);
+                string fullPath = !string.IsNullOrEmpty(fileName) ? Path.Combine(GetProjectImagesFolder(), fileName) : null;
+                LoadCustomerImage(fullPath);
 
-                // --- Load History (New Feature) ---
+                // ➤ FIX: CALL THE STATS LOADER
+                LoadCustomerStats(_selectedCustomerId);
                 LoadRentalHistory(_selectedCustomerId);
 
                 if (btnSave != null) btnSave.Text = "Update Customer";
-                _newPhotoTempPath = ""; // Reset temp
+                _newPhotoTempPath = "";
+            }
+        }
+
+        // ➤ FIX: IMPLEMENTED STATS LOADER
+        private void LoadCustomerStats(int customerId)
+        {
+            if (lblTotalRentals == null || lblTotalSpent == null) return;
+
+            using (MySqlConnection conn = new MySqlConnection(connString))
+            {
+                try
+                {
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand("sp_GetCustomerStats", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@p_CustomerId", customerId);
+
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                lblTotalRentals.Text = "Total Trips: " + reader["TotalTrips"].ToString();
+                                lblTotalSpent.Text = "Total Spent: " + Convert.ToDecimal(reader["TotalSpent"]).ToString("C2");
+
+                                if (lblDamageHistory != null)
+                                    lblDamageHistory.Text = "Damage Incidents: " + reader["DamageCount"].ToString();
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex) { MessageBox.Show("Stats Error: " + ex.Message); }
             }
         }
 
         private void LoadRentalHistory(int customerId)
         {
             if (dgvHistory == null) return;
-
             using (MySqlConnection conn = new MySqlConnection(connString))
             {
                 try
@@ -212,13 +239,12 @@ namespace Vehicle_Rental_Management_System.Controls
                             DataTable dt = new DataTable();
                             adapter.Fill(dt);
                             dgvHistory.DataSource = dt;
-                            // Basic Format
                             if (dgvHistory.Columns.Contains("TotalAmount")) dgvHistory.Columns["TotalAmount"].DefaultCellStyle.Format = "C2";
                             dgvHistory.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
                         }
                     }
                 }
-                catch { /* Ignore if history SP isn't made yet */ }
+                catch { }
             }
         }
 
@@ -246,27 +272,18 @@ namespace Vehicle_Rental_Management_System.Controls
         {
             int age = DateTime.Today.Year - dob.Year;
             if (dob.Date > DateTime.Today.AddYears(-age)) age--;
-
             if (lblAgeCheck != null)
             {
                 lblAgeCheck.Text = $"Age: {age}";
-                // FIX: Changed from 21 to 18 to allow your 20-year-old customer
                 if (age < 18) { lblAgeCheck.ForeColor = Color.Red; lblAgeCheck.Text += " (Restricted)"; }
                 else { lblAgeCheck.ForeColor = Color.Green; lblAgeCheck.Text += " (Verified)"; }
             }
         }
 
-        // ==========================================================
-        // 3. PHOTO UPLOAD / CAMERA
-        // ==========================================================
         private void BtnUploadPhoto_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog { Filter = "Images|*.jpg;*.jpeg;*.png" };
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                LoadCustomerImage(ofd.FileName);
-                _newPhotoTempPath = ofd.FileName;
-            }
+            if (ofd.ShowDialog() == DialogResult.OK) { LoadCustomerImage(ofd.FileName); _newPhotoTempPath = ofd.FileName; }
         }
 
         private void BtnCamera_Click(object sender, EventArgs e)
@@ -276,20 +293,18 @@ namespace Vehicle_Rental_Management_System.Controls
             {
                 string tempFile = Path.Combine(Path.GetTempPath(), $"Capture_{DateTime.Now.Ticks}.jpg");
                 cam.CapturedImage.Save(tempFile, System.Drawing.Imaging.ImageFormat.Jpeg);
-                LoadCustomerImage(tempFile);
-                _newPhotoTempPath = tempFile;
+                LoadCustomerImage(tempFile); _newPhotoTempPath = tempFile;
             }
         }
 
         // ==========================================================
-        // 4. SAVING (THE MAIN FIX)
+        // 3. SAVING DATA
         // ==========================================================
         private void BtnSave_Click(object sender, EventArgs e)
         {
             if (txtFirstName == null || string.IsNullOrWhiteSpace(txtFirstName.Text))
             { MessageBox.Show("First Name required."); return; }
 
-            // 1. Determine Image Filename
             string finalFileName = "";
             if (_selectedCustomerId != -1 && string.IsNullOrEmpty(_newPhotoTempPath))
             {
@@ -309,7 +324,6 @@ namespace Vehicle_Rental_Management_System.Controls
                 catch (Exception ex) { MessageBox.Show("Photo Save Error: " + ex.Message); return; }
             }
 
-            // 2. Save to Database
             using (MySqlConnection conn = new MySqlConnection(connString))
             {
                 try
@@ -317,17 +331,23 @@ namespace Vehicle_Rental_Management_System.Controls
                     conn.Open();
                     MySqlCommand cmd;
 
-                    if (_selectedCustomerId == -1) cmd = new MySqlCommand("sp_AddCustomer", conn);
+                    if (_selectedCustomerId == -1)
+                    {
+                        cmd = new MySqlCommand("sp_AddCustomer", conn);
+                        // ➤ FIX: Pass parameter for INSERT
+                        cmd.Parameters.AddWithValue("@p_IsFrequentRenter", chkLoyalty?.Checked ?? false);
+                    }
                     else
                     {
                         cmd = new MySqlCommand("sp_UpdateCustomer", conn);
                         cmd.Parameters.AddWithValue("@p_CustomerId", _selectedCustomerId);
                         cmd.Parameters.AddWithValue("@p_IsBlacklisted", chkBlacklist?.Checked ?? false);
+                        // ➤ FIX: Pass parameter for UPDATE
+                        cmd.Parameters.AddWithValue("@p_IsFrequentRenter", chkLoyalty?.Checked ?? false);
                     }
 
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    // --- PARAMETERS: Corrected to match the SQL Procedure (13 Total) ---
                     cmd.Parameters.AddWithValue("@p_FirstName", txtFirstName.Text);
                     cmd.Parameters.AddWithValue("@p_LastName", txtLastName?.Text ?? "");
                     cmd.Parameters.AddWithValue("@p_Email", txtEmail?.Text ?? "");
@@ -335,13 +355,8 @@ namespace Vehicle_Rental_Management_System.Controls
                     cmd.Parameters.AddWithValue("@p_Address", txtAddress?.Text ?? "");
                     cmd.Parameters.AddWithValue("@p_LicenseNumber", txtLicenseNum?.Text ?? "");
                     cmd.Parameters.AddWithValue("@p_LicenseExpiry", dtpExpiryDate?.Value ?? DateTime.Now);
-
-                    // FIX: Sending License State (Resolves Argument Count Error)
                     cmd.Parameters.AddWithValue("@p_LicenseState", txtLicenseState?.Text ?? "");
-
-                    // FIX: Sending DOB (Resolves Default Value Error)
                     cmd.Parameters.AddWithValue("@p_DOB", dtpDOB?.Value ?? DateTime.Now);
-
                     cmd.Parameters.AddWithValue("@p_CustomerType", cbCustomerType?.Text ?? "Individual");
                     cmd.Parameters.AddWithValue("@p_EmergencyName", txtEmergencyName?.Text ?? "");
                     cmd.Parameters.AddWithValue("@p_EmergencyPhone", txtEmergencyPhone?.Text ?? "");
@@ -396,15 +411,24 @@ namespace Vehicle_Rental_Management_System.Controls
             if (txtLicenseState != null) txtLicenseState.Clear();
             if (txtEmergencyName != null) txtEmergencyName.Clear();
             if (txtEmergencyPhone != null) txtEmergencyPhone.Clear();
+
+            // ➤ FIX: Reset Checkboxes
             if (chkBlacklist != null) chkBlacklist.Checked = false;
+            if (chkLoyalty != null) chkLoyalty.Checked = false;
+
             if (cbCustomerType != null) cbCustomerType.SelectedIndex = 0;
             if (dtpDOB != null) dtpDOB.Value = DateTime.Now;
             if (dtpExpiryDate != null) dtpExpiryDate.Value = DateTime.Now;
             if (picCustomerPhoto != null) picCustomerPhoto.Image = null;
             if (dgvCustomers != null) dgvCustomers.ClearSelection();
-            if (dgvHistory != null) dgvHistory.DataSource = null; 
+            if (dgvHistory != null) dgvHistory.DataSource = null;
             if (btnSave != null) btnSave.Text = "Add New Customer";
             if (lblAgeCheck != null) lblAgeCheck.Text = "Age: --";
+
+            // ➤ FIX: Reset Stats Labels
+            if (lblTotalRentals != null) lblTotalRentals.Text = "Total Trips: 0";
+            if (lblTotalSpent != null) lblTotalSpent.Text = "Total Spent: ₱0.00";
+            if (lblDamageHistory != null) lblDamageHistory.Text = "Damage Incidents: 0";
         }
     }
 }

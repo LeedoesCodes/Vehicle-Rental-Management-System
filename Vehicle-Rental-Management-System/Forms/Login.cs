@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using System.Configuration;
 using MySql.Data.MySqlClient;
+using Vehicle_Rental_Management_System.Services;
 
 namespace Vehicle_Rental_Management_System.Forms
 {
@@ -64,8 +65,23 @@ namespace Vehicle_Rental_Management_System.Forms
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            PerformLogin();
+            var authService = new AuthService();
+            var user = authService.Authenticate(txtUsername.Text.Trim(), txtPassword.Text);
+
+            if (user == null)
+            {
+                MessageBox.Show("Invalid username or password.");
+                return;
+            }
+
+            Program.CurrentUserId = user.UserId;
+            Program.CurrentUsername = user.Username;
+            Program.CurrentUserRole = user.Role;
+
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
+
 
         private void PerformLogin()
         {
@@ -115,10 +131,6 @@ namespace Vehicle_Rental_Management_System.Forms
 
         private UserInfo ValidateUserCredentials(string username, string password)
         {
-            if (username == "admin" && password == "admin123")
-            {
-                return new UserInfo { Id = 1, Username = "admin", Role = "Admin", FullName = "System Administrator" };
-            }
 
             string connectionString = "Server=localhost;Database=vehicle_rental_db;Uid=root;Pwd=;";
             if (ConfigurationManager.ConnectionStrings["MySqlConnection"] != null)

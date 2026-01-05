@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using System.Configuration;
+using Vehicle_Rental_Management_System.Helpers;
 
 namespace Vehicle_Rental_Management_System.Forms
 {
@@ -63,7 +64,8 @@ namespace Vehicle_Rental_Management_System.Forms
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
                         cmd.Parameters.AddWithValue("@p_Username", txtUsername.Text.Trim());
-                        cmd.Parameters.AddWithValue("@p_Password", txtPassword.Text);
+                        string hashedPassword = SecurityHelper.HashPassword(txtPassword.Text);
+                        cmd.Parameters.AddWithValue("@p_Password", hashedPassword);
                         cmd.Parameters.AddWithValue("@p_Role", cbRole.SelectedItem.ToString());
                         cmd.Parameters.AddWithValue("@p_Email", txtEmail.Text.Trim());
                         cmd.Parameters.AddWithValue("@p_Phone", txtPhone.Text.Trim());

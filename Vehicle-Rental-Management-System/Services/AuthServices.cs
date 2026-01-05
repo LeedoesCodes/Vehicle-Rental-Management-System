@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using MySql.Data.MySqlClient;
+using Vehicle_Rental_Management_System.Helpers;
 using Vehicle_Rental_Management_System.Models;
 
 namespace Vehicle_Rental_Management_System.Services
@@ -9,42 +10,40 @@ namespace Vehicle_Rental_Management_System.Services
     {
         public User Authenticate(string username, string password)
         {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-                return null;
-
-            try
+            using (var conn = DatabaseHelper.GetConnection())
             {
-              
-                using (var reader = ExecuteStoredProcedure(
-                    "AuthenticateUser",
-                    new MySqlParameter("@p_username", username),
-                    new MySqlParameter("@p_password", password) 
-                ))
+                conn.Open();
+
+                string query = @"SELECT * FROM Users 
+                         WHERE Username = @username 
+                         AND IsActive = 1";
+
+                using (var cmd = new MySqlCommand(query, conn))
                 {
-                    if (reader.Read())
+                    cmd.Parameters.AddWithValue("@username", username);
+
+                    using (var reader = cmd.ExecuteReader())
                     {
+                        if (!reader.Read())
+                            return null;
+
+                        string storedHash = reader["PasswordHash"].ToString();
+
+                        if (!SecurityHelper.VerifyPassword(password, storedHash))
+                            return null;
+
                         return new User
                         {
                             UserId = Convert.ToInt32(reader["UserId"]),
                             Username = reader["Username"].ToString(),
-                            PasswordHash = reader["PasswordHash"].ToString(),
-                            FullName = reader["FullName"].ToString(),
                             Role = reader["Role"].ToString(),
                             Email = reader["Email"].ToString(),
                             Phone = reader["Phone"].ToString(),
-                            IsActive = Convert.ToBoolean(reader["IsActive"]),
-                            CreatedDate = Convert.ToDateTime(reader["CreatedDate"])
+                            IsActive = Convert.ToBoolean(reader["IsActive"])
                         };
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Authentication error: {ex.Message}");
-         
-            }
-
-            return null;
         }
 
         public bool ChangePassword(int userId, string oldPassword, string newPassword)
